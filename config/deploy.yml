@@ -1,0 +1,83 @@
+# Rustrak fork — deployed as a prebuilt image until Phase 2 custom code
+# lands, at which point this switches to a ghcr.io/max611 build (see
+# NEW_APP.md pattern for builder/registry once we build our own image).
+service: rustrak
+
+image: rustrak/rustrak-server:postgres
+
+servers:
+  web:
+    - 158.69.112.144
+
+# DNS: CNAME rustrak.maxsloth.win -> vps.maxsloth.win (grey-cloud for first
+# deploy, then flip to Proxied; zone SSL mode is already Full (strict)).
+proxy:
+  ssl: true
+  host: rustrak.maxsloth.win
+  app_port: 8080
+  healthcheck:
+    path: /health
+
+# Public image on Docker Hub — no registry credentials needed.
+
+env:
+  secret:
+    - DATABASE_URL
+    - SESSION_SECRET_KEY
+    - PUBLIC_URL
+    # Bootstrap-only — only matters on an empty DB. Remove this line and
+    # redeploy once the admin account exists and its password is rotated.
+    - CREATE_SUPERUSER
+  clear:
+    RUSTRAK_METRICS: "off"
+
+aliases:
+  logs: app logs -f
+  shell: app exec --interactive --reuse "sh"
+
+# Source maps live here; the DB itself is in the Postgres accessory.
+volumes:
+  - "rustrak_data:/data"
+
+accessories:
+  # Postgres 17 (fleet convention, matches the shared PG17 backup image)
+  # even though upstream's own compose defaults to 16-alpine — plain sqlx
+  # SQL migrations, no PG16-specific features, so 17 is fine.
+  db:
+    image: postgres:17
+    host: 158.69.112.144
+    env:
+      clear:
+        POSTGRES_DB: rustrak_production
+        POSTGRES_USER: rustrak
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+
+  # Nightly pg_dump -> B2, per-app prefix, 30-day retention. Same custom
+  # PG17-client image the rest of the fleet uses.
+  db-backup:
+    image: ghcr.io/max611/postgres-backup-s3:17
+    host: 158.69.112.144
+    env:
+      clear:
+        SCHEDULE: "@daily"
+        BACKUP_KEEP_DAYS: "30"
+        POSTGRES_HOST: rustrak-db
+        POSTGRES_DATABASE: rustrak_production
+        POSTGRES_USER: rustrak
+        S3_BUCKET: maxsloth-backups
+        S3_PREFIX: rustrak
+        S3_REGION: us-east-005
+        S3_ENDPOINT: https://s3.us-east-005.backblazeb2.com
+      secret:
+        - POSTGRES_PASSWORD
+        - S3_ACCESS_KEY_ID
+        - S3_SECRET_ACCESS_KEY
+
+logging:
+  driver: json-file
+  options:
+    max-size: 100m
+    max-file: "3"

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Kamal wrapper that loads deploy secrets from .env.deploy first.
+#
+#   bin/deploy                 # kamal deploy (the everyday command)
+#   bin/deploy setup           # first-time: installs Docker on the server,
+#                              #   boots proxy + Postgres + backup, deploys app
+#   bin/deploy logs            # tail app logs        (alias in deploy.yml)
+#   bin/deploy shell            # sh in the server container (alias)
+#   bin/deploy accessory logs db-backup
+#   bin/deploy <any kamal command/args>
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+if [ ! -f .env.deploy ]; then
+  echo "Missing .env.deploy." >&2
+  exit 1
+fi
+
+set -a
+# shellcheck disable=SC1091
+source .env.deploy
+set +a
+
+case "${1:-deploy}" in
+  deploy|redeploy|rollback|setup)
+    if ! kamal "${@:-deploy}"; then
+      if [ -n "${NTFY_TOKEN:-}" ]; then
+        curl -fsS -m 10 -H "Authorization: Bearer $NTFY_TOKEN" \
+          -H "Title: $(basename "$PWD"): kamal ${1:-deploy} failed" \
+          -H "Tags: rotating_light" \
+          -d "bin/deploy ${*:-deploy} exited non-zero on $(hostname)" \
+          https://ntfy.maxsloth.win/deploys >/dev/null 2>&1 || true
+      fi
+      exit 1
+    fi
+    ;;
+  *)
+    exec kamal "$@"
+    ;;
+esac

@@ -57,3 +57,6 @@ react-doctor-report.json
 # Storybook static builds
 storybook-static/
 /.idea
+
+# Kamal deploy secrets (fleet convention — see vps-playbook)
+.env.deploy
