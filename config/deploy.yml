@@ -3,12 +3,10 @@
 # lands and this switches to a real build off this repo.
 service: rustrak
 
-# Kamal requires registry username/password for any non-localhost registry,
-# even for images that are public on their origin registry (Docker Hub
-# anonymous pulls aren't supported by Kamal's config validator). Mirrored
-# rustrak/rustrak-server:postgres -> ghcr.io/max611/rustrak-server:postgres
-# once, using credentials the fleet already has for ghcr.
-image: ghcr.io/max611/rustrak-server:postgres
+# Kamal always builds `image:` from this repo's Dockerfile and pushes it as
+# <registry.server>/<image>:<kamal-version> — no registry/tag prefix here,
+# Kamal adds those itself (registry.server below + its own version tag).
+image: max611/rustrak-server
 
 servers:
   web:
