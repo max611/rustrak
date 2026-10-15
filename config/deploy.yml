@@ -44,6 +44,10 @@ aliases:
   logs: app logs -f
   shell: app exec --interactive --reuse "sh"
 
+# Required by Kamal's config schema even though nothing is built here yet.
+builder:
+  arch: amd64
+
 # Source maps live here; the DB itself is in the Postgres accessory.
 volumes:
   - "rustrak_data:/data"
