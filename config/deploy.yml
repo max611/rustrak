@@ -1,9 +1,14 @@
-# Rustrak fork — deployed as a prebuilt image until Phase 2 custom code
-# lands, at which point this switches to a ghcr.io/max611 build (see
-# NEW_APP.md pattern for builder/registry once we build our own image).
+# Rustrak fork — currently a straight mirror of upstream's official
+# postgres-flavored image (see mirror note below), until Phase 2 custom code
+# lands and this switches to a real build off this repo.
 service: rustrak
 
-image: rustrak/rustrak-server:postgres
+# Kamal requires registry username/password for any non-localhost registry,
+# even for images that are public on their origin registry (Docker Hub
+# anonymous pulls aren't supported by Kamal's config validator). Mirrored
+# rustrak/rustrak-server:postgres -> ghcr.io/max611/rustrak-server:postgres
+# once, using credentials the fleet already has for ghcr.
+image: ghcr.io/max611/rustrak-server:postgres
 
 servers:
   web:
@@ -18,7 +23,11 @@ proxy:
   healthcheck:
     path: /health
 
-# Public image on Docker Hub — no registry credentials needed.
+registry:
+  server: ghcr.io
+  username: max611
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
 env:
   secret:
