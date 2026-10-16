@@ -238,6 +238,17 @@ pub async fn update_issue(
             "resolvedInNextRelease",
         )
         .await?;
+    } else if body.status.as_deref() == Some("ignored") && body.ignore_until.is_some() {
+        updated =
+            IssueService::snooze_until(pool.get_ref(), issue_id, body.ignore_until.unwrap())
+                .await?;
+        IssueSocialService::record_status_change(
+            pool.get_ref(),
+            issue_id,
+            actor.user_id(),
+            "ignored",
+        )
+        .await?;
     } else if let Some(status) = body.resolved_status(&updated.status)? {
         let substatus = body.validated_substatus()?;
         updated = IssueService::set_status(pool.get_ref(), issue_id, status, substatus).await?;

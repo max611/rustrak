@@ -608,6 +608,23 @@ impl AlertService {
             }
         };
 
+        // 1b. In-app inbox notification for every project member — independent
+        // of whether any outbound channel is configured below (feature parity
+        // with BugWatch's noticed-gem inbox; see NotificationInboxService).
+        if let Err(e) = crate::services::notification_inbox::NotificationInboxService::create_for_project(
+            pool,
+            project.id,
+            issue.id,
+            &alert_type.to_string(),
+            &issue.title(),
+            &format!("{} · {}", project.name, issue.title()),
+            &Self::build_issue_url(dashboard_url, project.id, issue.id),
+        )
+        .await
+        {
+            log::warn!("Failed to create in-app notifications for alert {:?}: {:?}", alert_type, e);
+        }
+
         // 2. Get associated rule channels (only enabled integrations — SCL-1)
         let rule_channels: Vec<AlertRuleChannel> = sqlx::query_as(
             r#"

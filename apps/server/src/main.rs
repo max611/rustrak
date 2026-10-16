@@ -14,6 +14,7 @@ use rustrak::services::sourcemap_store::LocalSourceMapStore;
 use rustrak::services::AuthTokenService;
 use rustrak::workers::monitor_worker::MonitorWorker;
 use rustrak::workers::session_aggregator::SessionAggregator;
+use rustrak::workers::snooze_worker::SnoozeWorker;
 use rustrak::workers::sourcemap_assembly::AssemblyWorker;
 
 #[cfg(feature = "openapi")]
@@ -172,6 +173,12 @@ async fn main() -> std::io::Result<()> {
     // Spawn monitor worker (Crons missed/timeout detection)
     {
         let worker = MonitorWorker::new(db_pool.clone(), config.monitor_tick_interval_secs);
+        tokio::spawn(worker.run());
+    }
+
+    // Spawn snooze worker (flips expired issue snoozes back to unresolved)
+    {
+        let worker = SnoozeWorker::new(db_pool.clone(), config.monitor_tick_interval_secs);
         tokio::spawn(worker.run());
     }
 
@@ -390,6 +397,7 @@ async fn main() -> std::io::Result<()> {
             .configure(routes::tokens::configure)
             // Team & invitations (global admin)
             .configure(routes::team::configure)
+            .configure(routes::notifications::configure)
             .configure(routes::invitations::configure)
             // Alert channels (global, not nested under projects)
             .configure(routes::alerts::configure_channels)

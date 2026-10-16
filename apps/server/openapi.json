@@ -11304,6 +11304,14 @@
               "null"
             ]
           },
+          "ignore_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Snooze until this time (only meaningful alongside `status: \"ignored\"`).\nStored in `status_details.ignoreUntil`; a background sweep flips the\nissue back to `unresolved` once it passes."
+          },
           "is_muted": {
             "type": [
               "boolean",

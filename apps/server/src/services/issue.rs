@@ -770,6 +770,79 @@ impl IssueService {
         Ok(issue)
     }
 
+    /// Snoozes an issue until `until`: sets it `ignored` with the Sentry-
+    /// compatible `archived_until_condition_met` substatus, and stashes the
+    /// deadline in `status_details.ignoreUntil` for [`sweep_expired_snoozes`]
+    /// to pick up later.
+    pub async fn snooze_until(pool: &DbPool, id: Uuid, until: DateTime<Utc>) -> AppResult<Issue> {
+        let details = serde_json::json!({ "ignoreUntil": until }).to_string();
+
+        sqlx::query_as::<_, Issue>(
+            r#"
+            UPDATE issues
+            SET status = 'ignored', substatus = 'archived_until_condition_met', status_details = $2
+            WHERE id = $1
+            RETURNING *
+            "#,
+        )
+        .bind(id)
+        .bind(details)
+        .fetch_one(pool)
+        .await
+        .map_err(|error| match error {
+            sqlx::Error::RowNotFound => AppError::NotFound(format!("Issue {} not found", id)),
+            other => other.into(),
+        })
+    }
+
+    /// Flips expired snoozes (`archived_until_condition_met` whose
+    /// `status_details.ignoreUntil` has passed `now`) back to `unresolved`.
+    /// `status_details` is parsed in application code rather than SQL: the
+    /// column is portable text, not a dialect-specific JSON type, and issue
+    /// volumes here never justify the SQL-side JSON-function split between
+    /// Postgres and SQLite. Returns how many issues were unsnoozed.
+    pub async fn sweep_expired_snoozes(pool: &DbPool, now: DateTime<Utc>) -> AppResult<u64> {
+        let candidates: Vec<(Uuid, String)> = sqlx::query_as(
+            r#"
+            SELECT id, status_details FROM issues
+            WHERE status = 'ignored' AND substatus = 'archived_until_condition_met'
+            "#,
+        )
+        .fetch_all(pool)
+        .await?;
+
+        let mut count = 0u64;
+        for (id, details) in candidates {
+            let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&details) else {
+                continue;
+            };
+            let ignore_until = parsed
+                .get("ignoreUntil")
+                .and_then(|v| v.as_str())
+                .and_then(|s| DateTime::parse_from_rfc3339(s).ok())
+                .map(|dt| dt.with_timezone(&Utc));
+
+            let Some(until) = ignore_until else { continue };
+            if until > now {
+                continue;
+            }
+
+            sqlx::query(
+                r#"
+                UPDATE issues
+                SET status = 'unresolved', substatus = 'ongoing', status_details = '{}'
+                WHERE id = $1
+                "#,
+            )
+            .bind(id)
+            .execute(pool)
+            .await?;
+            count += 1;
+        }
+
+        Ok(count)
+    }
+
     /// Marks an issue as resolved
     pub async fn resolve(pool: &DbPool, id: Uuid) -> AppResult<Issue> {
         Self::set_status(pool, id, crate::models::STATUS_RESOLVED, None).await

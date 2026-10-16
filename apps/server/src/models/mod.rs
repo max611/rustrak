@@ -52,6 +52,7 @@ pub mod installation;
 pub mod invitation;
 pub mod issue;
 pub mod log;
+pub mod notification;
 pub mod project;
 pub mod project_member;
 pub mod release;
@@ -113,6 +114,7 @@ pub use issue::{
     UpdateIssueState, STATUS_IGNORED, STATUS_RESOLVED, STATUS_UNRESOLVED,
 };
 pub use log::LogResponse;
+pub use notification::Notification;
 pub use project::{
     CreateProject, Project, ProjectResponse, UpdateProject, SELECTABLE_PLATFORMS, VALID_PLATFORMS,
 };

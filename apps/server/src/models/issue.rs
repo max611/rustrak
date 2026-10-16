@@ -140,6 +140,10 @@ pub struct IssueResponse {
 pub struct UpdateIssueState {
     pub status: Option<String>,
     pub substatus: Option<String>,
+    /// Snooze until this time (only meaningful alongside `status: "ignored"`).
+    /// Stored in `status_details.ignoreUntil`; a background sweep flips the
+    /// issue back to `unresolved` once it passes.
+    pub ignore_until: Option<DateTime<Utc>>,
     pub priority: Option<String>,
     /// `None` when omitted, `Some(None)` when the client sent an explicit
     /// `null` (clears the assignment), `Some(Some(id))` to assign.
