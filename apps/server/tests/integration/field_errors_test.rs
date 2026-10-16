@@ -105,6 +105,7 @@ fn create_test_config() -> Config {
             enabled: false,
             do_not_track: false,
         },
+        monitor_tick_interval_secs: 60,
     }
 }
 

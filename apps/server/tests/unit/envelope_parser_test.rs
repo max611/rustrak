@@ -15,6 +15,7 @@ fn item_type(kind: &EnvelopeItemKind) -> &str {
         EnvelopeItemKind::Log(_) => "log",
         EnvelopeItemKind::Span(_) => "span",
         EnvelopeItemKind::SpanV2Batch(_) => "span_v2",
+        EnvelopeItemKind::CheckIn(_) => "check_in",
         EnvelopeItemKind::Other(t, _) => t,
     }
 }
@@ -26,7 +27,8 @@ fn raw_payload(kind: &EnvelopeItemKind) -> Option<&[u8]> {
         | EnvelopeItemKind::Transaction(p)
         | EnvelopeItemKind::Log(p)
         | EnvelopeItemKind::Span(p)
-        | EnvelopeItemKind::SpanV2Batch(p) => Some(p),
+        | EnvelopeItemKind::SpanV2Batch(p)
+        | EnvelopeItemKind::CheckIn(p) => Some(p),
         EnvelopeItemKind::Other(_, p) => Some(p),
         EnvelopeItemKind::Session(_) | EnvelopeItemKind::Sessions(_) => None,
     }

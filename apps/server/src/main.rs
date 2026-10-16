@@ -12,6 +12,7 @@ use rustrak::routes;
 use rustrak::services::sourcemap::{DbSourceMapProvider, SourceMapProvider};
 use rustrak::services::sourcemap_store::LocalSourceMapStore;
 use rustrak::services::AuthTokenService;
+use rustrak::workers::monitor_worker::MonitorWorker;
 use rustrak::workers::session_aggregator::SessionAggregator;
 use rustrak::workers::sourcemap_assembly::AssemblyWorker;
 
@@ -167,6 +168,12 @@ async fn main() -> std::io::Result<()> {
         },
         Err(why) => rustrak::telemetry::TelemetryStatus::Disabled(why),
     };
+
+    // Spawn monitor worker (Crons missed/timeout detection)
+    {
+        let worker = MonitorWorker::new(db_pool.clone(), config.monitor_tick_interval_secs);
+        tokio::spawn(worker.run());
+    }
 
     // Bootstrap: create initial token if none exist
     bootstrap_token(&db_pool).await;
@@ -377,6 +384,7 @@ async fn main() -> std::io::Result<()> {
             .configure(routes::spans::configure)
             // AI Agent Monitoring dashboard API (more specific than generic projects scope)
             .configure(routes::agents::configure)
+            .configure(routes::monitors::configure)
             // Then generic projects/tokens routes
             .configure(routes::projects::configure)
             .configure(routes::tokens::configure)

@@ -73,6 +73,10 @@ pub enum EnvelopeItemKind {
     /// carry many spans. Modern Sentry SDKs (verified: `@sentry/node` 10.65 +
     /// Vercel AI SDK) send AI-instrumented spans this way, not as `Span`.
     SpanV2Batch(Bytes),
+    /// Monitor check-in (Sentry Crons "check_in" item type). Carries the raw
+    /// JSON payload — parsed and normalized in the processor, mirroring Relay's
+    /// `CheckInsProcessor`.
+    CheckIn(Bytes),
     Other(String, Bytes),
 }
 
@@ -106,6 +110,7 @@ impl From<(ItemHeaders, Bytes)> for EnvelopeItemKind {
                     Self::Span(payload)
                 }
             }
+            "check_in" => Self::CheckIn(payload),
             "session" => match serde_json::from_slice(&payload) {
                 Ok(s) => Self::Session(s),
                 Err(e) => {

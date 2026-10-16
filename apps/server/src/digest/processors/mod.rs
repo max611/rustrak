@@ -1,3 +1,4 @@
+pub mod check_in;
 pub mod event;
 pub mod logs;
 pub mod session;
@@ -6,6 +7,7 @@ pub mod span_v2;
 pub mod transaction;
 
 pub(crate) use event::is_retryable_write_contention;
+pub use check_in::CheckInProcessor;
 pub use event::{Digested, ErrorProcessor};
 pub use logs::LogsProcessor;
 pub use session::{SessionItem, SessionProcessor};
@@ -175,6 +177,7 @@ pub struct Processors {
     pub logs: LogsProcessor,
     pub spans: SpanProcessor,
     pub spans_v2: SpanV2Processor,
+    pub check_ins: CheckInProcessor,
     /// One gate for the spawned digest tasks — bounds peak memory
     /// under bursts (see [`MAX_CONCURRENT_PROCESSING`]). Lives here,
     /// not in a static, so every app instance (each test server) gets
@@ -199,6 +202,7 @@ impl Processors {
             logs: LogsProcessor,
             spans: SpanProcessor,
             spans_v2: SpanV2Processor,
+            check_ins: CheckInProcessor,
             processing_slot: Arc::new(tokio::sync::Semaphore::const_new(MAX_CONCURRENT_PROCESSING)),
             counters: crate::telemetry::Counters::global(),
         }
@@ -261,6 +265,8 @@ pub enum Route {
     /// Standalone spans, Spans Protocol v2 (batched container) — direct
     /// store, no grouping.
     SpanV2,
+    /// Monitor check-ins (Sentry Crons) — direct store, upserts the monitor.
+    CheckIn,
     /// Forward-compatible catch-all: logged and dropped, never processed.
     Ignored,
 }
@@ -277,6 +283,7 @@ pub fn route(item: &EnvelopeItemKind) -> Route {
         EnvelopeItemKind::Log(_) => Route::Log,
         EnvelopeItemKind::Span(_) => Route::Span,
         EnvelopeItemKind::SpanV2Batch(_) => Route::SpanV2,
+        EnvelopeItemKind::CheckIn(_) => Route::CheckIn,
         EnvelopeItemKind::Other(_, _) => Route::Ignored,
     }
 }

@@ -9,6 +9,7 @@ export { InvitationsResource } from './invitations.js';
 export { IssuesResource } from './issues.js';
 export { LogsResource } from './logs.js';
 export { MembersResource } from './members.js';
+export { MonitorsResource } from './monitors.js';
 export { ProjectsResource } from './projects.js';
 export { ReleasesResource } from './releases.js';
 export { SessionsResource } from './sessions.js';

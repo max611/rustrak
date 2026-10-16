@@ -44,6 +44,7 @@ where
 
 pub mod alert;
 pub mod auth_token;
+pub mod check_in;
 pub mod event;
 pub mod gen_ai;
 pub mod grouping;
@@ -96,6 +97,7 @@ pub use alert::{
     WebhookRoutingOverride,
 };
 pub use auth_token::{AuthToken, AuthTokenCreatedResponse, AuthTokenResponse, CreateAuthToken};
+pub use check_in::{CheckInResponse, MonitorResponse};
 pub use event::{Event, EventDetailResponse, EventResponse, EventSummary};
 pub use gen_ai::{
     AgentDurationPoint, AgentModelRow, AgentSummary, AgentTimeseriesPoint, AgentToolRow,

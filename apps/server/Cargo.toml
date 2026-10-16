@@ -141,6 +141,10 @@ mimalloc = "0.1.52"
 utoipa = { version = "6.0.0", features = ["actix_extras", "uuid", "chrono"], optional = true }
 utoipa-scalar = { version = "0.4.0", features = ["actix-web"], optional = true }
 
+# Monitor schedule parsing (Sentry Crons: crontab schedules; chrono-tz already
+# a dependency above for timezone-aware interval schedules)
+cron = "0.17.0"
+
 [dev-dependencies]
 # The crate depends on itself so the integration tests, which are separate
 # crates, get `test-seams` enabled. Gating the seams on `debug_assertions`

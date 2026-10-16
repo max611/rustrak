@@ -34,6 +34,9 @@ pub struct Config {
     pub dashboard: DashboardConfig,
     /// Anonymous usage telemetry, as the environment describes it.
     pub telemetry: TelemetryConfig,
+    /// How often the monitor worker scans for missed/timed-out check-ins (seconds).
+    /// Default: 60. Override with MONITOR_TICK_INTERVAL_SECS env var.
+    pub monitor_tick_interval_secs: u64,
 }
 
 /// The anonymous telemetry switches. Whether anything is actually sent is
@@ -185,6 +188,10 @@ impl Config {
                 .unwrap_or(10_000),
             dashboard: DashboardConfig::from_env()?,
             telemetry: TelemetryConfig::from_env()?,
+            monitor_tick_interval_secs: env::var("MONITOR_TICK_INTERVAL_SECS")
+                .unwrap_or_else(|_| "60".to_string())
+                .parse()
+                .unwrap_or(60),
         })
     }
 }

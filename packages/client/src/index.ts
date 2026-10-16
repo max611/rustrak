@@ -60,6 +60,9 @@ export type {
   BulkDeleteIssues,
   BulkUpdateIssues,
   ChangePasswordRequest,
+  /** @deprecated Use ProviderType */
+  ChannelType,
+  CheckIn,
   ChunkUploadCapability,
   CleanupCounts,
   CleanupOptions,
@@ -90,6 +93,7 @@ export type {
   IssueStatus,
   IssueTagValue,
   ListAlertHistoryOptions,
+  ListCheckInsOptions,
   ListEventsOptions,
   ListIssuesOptions,
   ListLogsOptions,
@@ -101,6 +105,9 @@ export type {
   LoginRequest,
   LoginResult,
   MetricDelta,
+  Monitor,
+  /** @deprecated Use AlertIntegration */
+  NotificationChannel,
   OffsetPaginatedResponse,
   PaginatedResponse,
   PreviewTemplateResponse,
