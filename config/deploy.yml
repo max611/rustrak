@@ -1,6 +1,5 @@
-# Rustrak fork — currently a straight mirror of upstream's official
-# postgres-flavored image (see mirror note below), until Phase 2 custom code
-# lands and this switches to a real build off this repo.
+# Rustrak fork — built from this repo's own apps/server/Dockerfile (not
+# mirroring upstream's image anymore, now that custom commits have landed).
 service: rustrak
 
 # Kamal always builds `image:` from this repo's Dockerfile and pushes it as
@@ -42,9 +41,17 @@ aliases:
   logs: app logs -f
   shell: app exec --interactive --reuse "sh"
 
-# Required by Kamal's config schema even though nothing is built here yet.
+# apps/server/Dockerfile expects its build context to BE apps/server (it
+# does a bare `COPY . .`), not the repo root.
 builder:
   arch: amd64
+  context: apps/server
+  dockerfile: Dockerfile
+  args:
+    FEATURES: postgres
+  cache:
+    type: registry
+    options: mode=max,image-manifest=true,oci-mediatypes=true
 
 # Source maps live here; the DB itself is in the Postgres accessory.
 volumes:
