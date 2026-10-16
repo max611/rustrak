@@ -11,7 +11,11 @@ use crate::models::Notification;
 pub struct NotificationInboxService;
 
 impl NotificationInboxService {
-    /// Creates one notification per project member. Called from
+    /// Creates one notification per project member, plus every global admin
+    /// (an admin has access to every project per `access::require` without
+    /// needing a `project_members` row — on a single-admin instance with no
+    /// per-project memberships configured, that's the only recipient there
+    /// is). Called from
     /// [`crate::services::alert::AlertService::trigger_alert`] alongside
     /// outbound dispatch, so the inbox fills in even for projects with no
     /// Slack/email/webhook integration configured.
@@ -29,6 +33,9 @@ impl NotificationInboxService {
             INSERT INTO notifications (user_id, project_id, issue_id, kind, title, body, url)
             SELECT user_id, $1, $2, $3, $4, $5, $6
             FROM project_members WHERE project_id = $1
+            UNION
+            SELECT id, $1, $2, $3, $4, $5, $6
+            FROM users WHERE role = 'admin'
             "#,
         )
         .bind(project_id)
