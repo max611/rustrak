@@ -46,7 +46,7 @@ aliases:
 builder:
   arch: amd64
   context: apps/server
-  dockerfile: Dockerfile
+  dockerfile: apps/server/Dockerfile
   args:
     FEATURES: postgres
   cache:
