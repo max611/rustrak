@@ -9,6 +9,8 @@ import type {
   Monitor,
   OffsetPaginatedResponse,
 } from '../types/index.js';
+import { mapResult, type Result } from '../result.js';
+import type { RustrakError } from '../errors.js';
 import { BaseResource } from './base.js';
 
 /**
@@ -18,12 +20,15 @@ export class MonitorsResource extends BaseResource {
   /**
    * List all monitors for a project, most-recently-active first.
    */
-  async list(projectId: number): Promise<Monitor[]> {
+  async list(projectId: number): Promise<Result<Monitor[], RustrakError>> {
     const data = await this.http
       .get(`api/projects/${projectId}/monitors`)
       .json();
 
-    return this.validate(data, monitorsListResponseSchema).monitors;
+    return mapResult(
+      this.validate(data, monitorsListResponseSchema),
+      (parsed) => parsed.monitors,
+    );
   }
 
   /**
@@ -34,7 +39,7 @@ export class MonitorsResource extends BaseResource {
     projectId: number,
     slug: string,
     options?: ListCheckInsOptions,
-  ): Promise<OffsetPaginatedResponse<CheckIn>> {
+  ): Promise<Result<OffsetPaginatedResponse<CheckIn>, RustrakError>> {
     const searchParams: Record<string, string> = {};
 
     if (options?.page) {

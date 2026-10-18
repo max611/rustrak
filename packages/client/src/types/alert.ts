@@ -36,6 +36,12 @@ export type AlertStatus = z.infer<typeof alertStatusSchema>;
  */
 export type AlertIntegration = z.infer<typeof alertIntegrationSchema>;
 
+/** @deprecated Use {@link ProviderType} */
+export type ChannelType = ProviderType;
+
+/** @deprecated Use {@link AlertIntegration} */
+export type NotificationChannel = AlertIntegration;
+
 /**
  * Create alert integration request
  */
