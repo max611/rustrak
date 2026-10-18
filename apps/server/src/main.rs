@@ -437,10 +437,13 @@ async fn main() -> std::io::Result<()> {
             .configure(routes::storage::configure)
             // What the anonymous telemetry would send (admin only)
             .configure(routes::telemetry::configure)
+            // /api/v1/* — project-API-key auth (X-Api-Key), BugWatch parity.
+            // Must come before ingest's dynamic /api/{project_id} scope,
+            // which would otherwise capture "v1" as a project_id and 404
+            // inside itself before this literal prefix ever gets a turn.
+            .configure(routes::api_v1::configure)
             // Ingest routes (Sentry SDK auth)
-            .configure(routes::ingest::configure)
-            // /api/v1/* — project-API-key auth (X-Api-Key), BugWatch parity
-            .configure(routes::api_v1::configure);
+            .configure(routes::ingest::configure);
 
         #[cfg(feature = "openapi")]
         let app = {
