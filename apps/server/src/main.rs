@@ -182,6 +182,34 @@ async fn main() -> std::io::Result<()> {
         tokio::spawn(worker.run());
     }
 
+    // Spawn the uptime monitoring scheduler + check-history cleanup task
+    // (active HTTP/TCP probing — distinct from the Crons check-in worker
+    // above). Cloned up front, same as the other background tasks below.
+    {
+        let uptime_pool = db_pool.clone();
+        let uptime_config = config.uptime.clone();
+        let dashboard_url = config.dashboard_url();
+        let uptime_client = reqwest::Client::builder()
+            .timeout(std::time::Duration::from_secs(30))
+            .build()
+            .map_err(std::io::Error::other)?;
+        tokio::spawn(async move {
+            rustrak::services::uptime::run_scheduler(
+                uptime_pool,
+                uptime_config,
+                uptime_client,
+                dashboard_url,
+            )
+            .await;
+        });
+
+        let cleanup_pool = db_pool.clone();
+        let retention_days = config.uptime.retention_days;
+        tokio::spawn(async move {
+            rustrak::services::uptime::run_cleanup_task(cleanup_pool, retention_days).await;
+        });
+    }
+
     // Bootstrap: create initial token if none exist
     bootstrap_token(&db_pool).await;
 
@@ -392,6 +420,7 @@ async fn main() -> std::io::Result<()> {
             // AI Agent Monitoring dashboard API (more specific than generic projects scope)
             .configure(routes::agents::configure)
             .configure(routes::monitors::configure)
+            .configure(routes::uptime_monitors::configure)
             // Then generic projects/tokens routes
             .configure(routes::projects::configure)
             .configure(routes::tokens::configure)

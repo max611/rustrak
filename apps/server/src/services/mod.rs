@@ -26,6 +26,8 @@ pub mod span;
 pub mod stats;
 pub mod storage;
 pub mod transaction;
+pub mod uptime;
+pub mod uptime_monitor;
 pub mod users;
 
 pub use alert::AlertService;
@@ -54,6 +56,7 @@ pub use span::{SpanFilters, SpanService};
 pub use stats::StatsService;
 pub use storage::{CleanupJob, StorageService};
 pub use transaction::{TransactionFilters, TransactionService};
+pub use uptime_monitor::UptimeMonitorService;
 pub use users::{OidcLinkPolicy, OidcOutcome, UsersService};
 
 pub use grouping_v1::calculate_grouping_key_v1;

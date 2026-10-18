@@ -151,6 +151,9 @@ cron = "0.17.0"
 # instead made `cargo test --release` fail to compile.
 rustrak = { path = ".", default-features = false, features = ["test-seams"] }
 
+# HTTP mocking for uptime-probe unit tests (apps/server/src/services/uptime/probes.rs)
+mockito = "1.6"
+
 # Names the request type for helpers that drive an `init_service` app
 actix-http = "3.18.13"
 

@@ -62,6 +62,7 @@ pub mod span_v2;
 pub mod stats;
 pub mod storage;
 pub mod transaction;
+pub mod uptime_monitor;
 pub mod user;
 
 pub use alert::{
@@ -129,5 +130,9 @@ pub use storage::{
 pub use transaction::{
     span_attributes, SpanDetailResponse, SpanResponse, TransactionDetailResponse,
     TransactionResponse, TransactionStatsResponse,
+};
+pub use uptime_monitor::{
+    AssignUptimeMonitorChannels, CheckType, CreateUptimeMonitor, UpdateUptimeMonitor,
+    UptimeCheck, UptimeIncident, UptimeMonitor, UptimeMonitorState, UptimeMonitorStateEnum,
 };
 pub use user::{ChangePasswordRequest, CreateUserRequest, LoginRequest, User, UserRole};

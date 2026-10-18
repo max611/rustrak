@@ -312,6 +312,10 @@ mod tests {
                 do_not_track: false,
             },
             monitor_tick_interval_secs: 60,
+            uptime: crate::config::UptimeConfig {
+                retention_days: 90,
+                max_concurrent_checks: 50,
+            },
         }
     }
 

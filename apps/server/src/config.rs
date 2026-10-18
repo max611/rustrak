@@ -2,6 +2,32 @@ use actix_web::cookie::Key;
 use std::env;
 use std::time::Duration;
 
+/// Uptime monitoring configuration (active HTTP/TCP probing)
+#[derive(Debug, Clone)]
+pub struct UptimeConfig {
+    /// How many days of check history to retain
+    pub retention_days: u32,
+    /// Maximum number of concurrent probe tasks
+    pub max_concurrent_checks: usize,
+}
+
+impl UptimeConfig {
+    pub fn from_env() -> Self {
+        Self {
+            retention_days: std::env::var("UPTIME_RETENTION_DAYS")
+                .ok()
+                .and_then(|v| v.parse().ok())
+                .filter(|v: &u32| *v > 0)
+                .unwrap_or(90),
+            max_concurrent_checks: std::env::var("UPTIME_MAX_CONCURRENT_CHECKS")
+                .ok()
+                .and_then(|v| v.parse().ok())
+                .filter(|v: &usize| *v > 0)
+                .unwrap_or(50),
+        }
+    }
+}
+
 /// Application configuration loaded from environment variables
 #[derive(Debug, Clone)]
 pub struct Config {
@@ -37,6 +63,8 @@ pub struct Config {
     /// How often the monitor worker scans for missed/timed-out check-ins (seconds).
     /// Default: 60. Override with MONITOR_TICK_INTERVAL_SECS env var.
     pub monitor_tick_interval_secs: u64,
+    /// Uptime monitoring (active HTTP/TCP probing) settings.
+    pub uptime: UptimeConfig,
 }
 
 /// The anonymous telemetry switches. Whether anything is actually sent is
@@ -192,6 +220,7 @@ impl Config {
                 .unwrap_or_else(|_| "60".to_string())
                 .parse()
                 .unwrap_or(60),
+            uptime: UptimeConfig::from_env(),
         })
     }
 }

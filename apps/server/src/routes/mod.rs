@@ -24,3 +24,4 @@ pub mod team;
 pub mod telemetry;
 pub mod tokens;
 pub mod transactions;
+pub mod uptime_monitors;
