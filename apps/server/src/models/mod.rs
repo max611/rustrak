@@ -54,6 +54,7 @@ pub mod issue;
 pub mod log;
 pub mod notification;
 pub mod project;
+pub mod project_api_key;
 pub mod project_member;
 pub mod release;
 pub mod session;
@@ -118,6 +119,9 @@ pub use log::LogResponse;
 pub use notification::Notification;
 pub use project::{
     CreateProject, Project, ProjectResponse, UpdateProject, SELECTABLE_PLATFORMS, VALID_PLATFORMS,
+};
+pub use project_api_key::{
+    CreateProjectApiKey, ProjectApiKey, ProjectApiKeyCreatedResponse, ProjectApiKeyResponse,
 };
 pub use project_member::{ProjectMember, ProjectMemberResponse, ProjectRole, UpsertProjectMember};
 pub use release::{is_valid_version, CreateRelease, Release, ReleaseResponse, UpdateRelease};

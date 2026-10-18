@@ -7,7 +7,7 @@ use crate::auth::session::AuthenticatedUser;
 use crate::db::DbPool;
 use crate::error::{AppError, AppResult};
 use crate::models::{AuthToken, Project, User};
-use crate::services::{AuthTokenService, ProjectService, UsersService};
+use crate::services::{AuthTokenService, ProjectApiKeyService, ProjectService, UsersService};
 
 /// Extractor for Bearer token authentication (API endpoints)
 ///
@@ -167,6 +167,61 @@ impl FromRequest for SentryAuth {
             }
 
             Ok(SentryAuth { project })
+        })
+    }
+}
+
+/// Extractor for project-scoped API keys (`/api/v1/*`).
+///
+/// Validates the `X-Api-Key` header against `project_api_keys`, mirroring
+/// BugWatch's single per-project `api_key` (feature parity item). Unlike
+/// [`ApiActor`], there is no path `project_id` to check against — the key
+/// itself fully determines the scope, matching BugWatch's model where
+/// `/api/v1/issues` etc. have no project segment in the URL at all.
+pub struct ProjectKeyAuth {
+    pub project_id: i32,
+}
+
+impl FromRequest for ProjectKeyAuth {
+    type Error = AppError;
+    type Future = Pin<Box<dyn Future<Output = Result<Self, Self::Error>>>>;
+
+    fn from_request(req: &HttpRequest, _payload: &mut Payload) -> Self::Future {
+        let pool = match req.app_data::<web::Data<DbPool>>().cloned() {
+            Some(pool) => pool,
+            None => {
+                return Box::pin(async {
+                    Err(AppError::Internal(
+                        "Database pool not configured".to_string(),
+                    ))
+                });
+            }
+        };
+
+        let key_header = req
+            .headers()
+            .get("X-Api-Key")
+            .and_then(|h| h.to_str().ok())
+            .map(|s| s.to_string());
+
+        Box::pin(async move {
+            let key_str = key_header
+                .ok_or_else(|| AppError::Unauthorized("Missing X-Api-Key header".to_string()))?;
+
+            let key = ProjectApiKeyService::get_by_key(pool.get_ref(), &key_str)
+                .await?
+                .ok_or_else(|| AppError::Unauthorized("Invalid API key".to_string()))?;
+
+            // Fire-and-forget, same pattern as BearerAuth's last_used_at update.
+            let pool_clone = pool.clone();
+            let key_id = key.id;
+            tokio::spawn(async move {
+                let _ = ProjectApiKeyService::update_last_used(pool_clone.get_ref(), key_id).await;
+            });
+
+            Ok(ProjectKeyAuth {
+                project_id: key.project_id,
+            })
         })
     }
 }

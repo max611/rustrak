@@ -1,5 +1,6 @@
 pub mod agents;
 pub mod alerts;
+pub mod api_v1;
 pub mod auth;
 pub mod dashboard;
 pub mod events;
@@ -13,6 +14,7 @@ pub mod notifications;
 pub mod metrics;
 pub mod monitors;
 pub mod period;
+pub mod project_api_keys;
 pub mod projects;
 pub mod releases;
 pub mod sessions;

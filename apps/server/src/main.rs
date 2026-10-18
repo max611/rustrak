@@ -421,6 +421,7 @@ async fn main() -> std::io::Result<()> {
             .configure(routes::agents::configure)
             .configure(routes::monitors::configure)
             .configure(routes::uptime_monitors::configure)
+            .configure(routes::project_api_keys::configure)
             // Then generic projects/tokens routes
             .configure(routes::projects::configure)
             .configure(routes::tokens::configure)
@@ -437,7 +438,9 @@ async fn main() -> std::io::Result<()> {
             // What the anonymous telemetry would send (admin only)
             .configure(routes::telemetry::configure)
             // Ingest routes (Sentry SDK auth)
-            .configure(routes::ingest::configure);
+            .configure(routes::ingest::configure)
+            // /api/v1/* — project-API-key auth (X-Api-Key), BugWatch parity
+            .configure(routes::api_v1::configure);
 
         #[cfg(feature = "openapi")]
         let app = {
