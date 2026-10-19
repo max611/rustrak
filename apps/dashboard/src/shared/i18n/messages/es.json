@@ -505,7 +505,8 @@
       "performance": "Rendimiento",
       "agents": "Agentes",
       "logs": "Logs",
-      "settings": "Configuración"
+      "settings": "Configuración",
+      "uptimeMonitors": "Monitores de disponibilidad"
     },
     "collapse": {
       "expand": "Expandir",
@@ -1549,7 +1550,8 @@
       "openProjectSettingsMenu": "Abrir menú de configuración del proyecto",
       "projectSettingsTitle": "Configuración del proyecto",
       "openSettingsMenu": "Abrir menú de configuración",
-      "settingsTitle": "Configuración"
+      "settingsTitle": "Configuración",
+      "apiKeys": "Claves de API"
     },
     "loadProjectFailed": "No se pudo cargar el proyecto",
     "loadProjectsFailed": "No se pudieron cargar los proyectos",
@@ -1697,6 +1699,147 @@
       "githubRepository": "Repositorio de GitHub",
       "reportAnIssue": "Informar de un problema",
       "sentryDocs": "Documentación de los SDK de Sentry"
+    }
+  },
+  "projectApiKeys": {
+    "meta": {
+      "title": "Claves de API"
+    },
+    "loadFailed": "No se pudieron cargar las claves de API",
+    "title": "Claves de API",
+    "subtitle": "Claves que permiten a scripts y servicios leer y escribir los datos de este proyecto a través de /api/v1.",
+    "create": {
+      "trigger": "Nueva clave de API",
+      "createdTitle": "Clave de API creada",
+      "createdDescription": "Copia tu clave ahora. También puedes recuperarla más tarde desde la lista.",
+      "copyKeyLabel": "Copiar la nueva clave",
+      "copyAgainHint": "Puedes copiar esta clave de nuevo en cualquier momento desde la lista de claves.",
+      "done": "Listo",
+      "title": "Crear clave de API",
+      "description": "Crea una nueva clave limitada a este proyecto, para usar con los endpoints /api/v1.",
+      "descriptionLabel": "Descripción (opcional)",
+      "descriptionPlaceholder": "p. ej., Pipeline de CI/CD",
+      "charCount": "{count}/{max} {count, plural, =1 {carácter} other {caracteres}}",
+      "descriptionTooLong": "La descripción debe tener como máximo {max} caracteres",
+      "cancel": "Cancelar",
+      "creating": "Creando...",
+      "submit": "Crear clave"
+    },
+    "copyKeyLabel": "Copiar clave {label}",
+    "deleteKeyLabel": "Eliminar clave {label}",
+    "never": "Nunca",
+    "neverUsed": "Nunca usada",
+    "createdOn": "Creada el {date}",
+    "usedOn": "Usada {time}",
+    "columns": {
+      "key": "Clave",
+      "description": "Descripción",
+      "created": "Creada",
+      "lastUsed": "Último uso"
+    },
+    "actionsLabel": "Acciones",
+    "toasts": {
+      "createFailed": "No se pudo crear la clave",
+      "created": "Clave creada",
+      "createdHint": "Asegúrate de copiar tu clave ahora.",
+      "deleted": "Clave eliminada",
+      "deleteFailed": "No se pudo eliminar la clave",
+      "getFailed": "No se pudo obtener la clave",
+      "copied": "Clave copiada al portapapeles",
+      "copyTitle": "Copiar la clave"
+    },
+    "empty": {
+      "title": "Todavía no hay claves de API",
+      "createFirst": "Crea tu primera clave"
+    },
+    "list": {
+      "title": "Claves de API del proyecto",
+      "description": "Las claves autentican la superficie /api/v1, limitadas solo a este proyecto"
+    },
+    "deleteDialog": {
+      "title": "¿Revocar clave?",
+      "description": "Esto revocará permanentemente esta clave. Cualquier script o servicio que la use perderá el acceso de inmediato. Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "deleting": "Revocando...",
+      "confirm": "Revocar"
+    }
+  },
+  "uptimeMonitors": {
+    "meta": {
+      "title": "Monitores de disponibilidad"
+    },
+    "loadFailed": "No se pudieron cargar los monitores de disponibilidad",
+    "title": "Monitores de disponibilidad",
+    "subtitle": "Comprobaciones HTTP/TCP activas que vigilan si los endpoints de este proyecto son accesibles.",
+    "disabled": "Deshabilitado",
+    "empty": {
+      "title": "Todavía no hay monitores",
+      "createFirst": "Crea tu primer monitor"
+    },
+    "list": {
+      "title": "Monitores",
+      "description": "Cada monitor se comprueba en su propio intervalo y alerta ante cambios de estado"
+    },
+    "create": {
+      "trigger": "Nuevo monitor"
+    },
+    "columns": {
+      "name": "Nombre",
+      "url": "URL",
+      "state": "Estado",
+      "interval": "Intervalo"
+    },
+    "actionsLabel": "Acciones",
+    "checkNowLabel": "Comprobar {name} ahora",
+    "editLabel": "Editar {name}",
+    "deleteLabel": "Eliminar {name}",
+    "state": {
+      "loading": "Cargando",
+      "pending": "Pendiente",
+      "up": "Activo",
+      "down": "Caído",
+      "pending_up": "Recuperando",
+      "pending_down": "Fallando"
+    },
+    "form": {
+      "createTitle": "Crear monitor de disponibilidad",
+      "editTitle": "Editar monitor de disponibilidad",
+      "description": "Comprueba una URL en un intervalo y alerta ante cambios de estado.",
+      "name": "Nombre",
+      "namePlaceholder": "p. ej., Comprobación de salud de producción",
+      "checkType": "Tipo de comprobación",
+      "checkTypeHttp": "HTTP",
+      "checkTypeTcp": "TCP",
+      "url": "URL",
+      "intervalSecs": "Intervalo (segundos)",
+      "timeoutSecs": "Tiempo de espera (segundos)",
+      "failThreshold": "Umbral de fallos",
+      "recoveryThreshold": "Umbral de recuperación",
+      "expectedStatus": "Estado esperado (opcional)",
+      "expectedStatusPlaceholder": "p. ej., 200",
+      "repeatIntervalSecs": "Repetir alerta tras (segundos)",
+      "enabled": "Habilitado",
+      "enabledDescription": "Los monitores deshabilitados no se comprueban según su programación.",
+      "cancel": "Cancelar",
+      "saving": "Guardando...",
+      "save": "Guardar cambios",
+      "submit": "Crear monitor"
+    },
+    "deleteDialog": {
+      "title": "¿Eliminar monitor?",
+      "description": "Esto eliminará permanentemente “{name}” y su historial de comprobaciones. Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "deleting": "Eliminando...",
+      "confirm": "Eliminar"
+    },
+    "toasts": {
+      "created": "Monitor creado",
+      "updated": "Monitor actualizado",
+      "deleted": "Monitor eliminado",
+      "deleteFailed": "No se pudo eliminar el monitor",
+      "checkFailed": "No se pudo ejecutar la comprobación",
+      "checkOk": "Comprobación exitosa ({ms}ms)",
+      "checkFailedResult": "La comprobación falló"
     }
   }
 }

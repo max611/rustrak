@@ -505,7 +505,8 @@
       "performance": "Performanță",
       "agents": "Agenți",
       "logs": "Jurnale",
-      "settings": "Setări"
+      "settings": "Setări",
+      "uptimeMonitors": "Monitoare de disponibilitate"
     },
     "collapse": {
       "expand": "Extinde",
@@ -1549,7 +1550,8 @@
       "openProjectSettingsMenu": "Deschide meniul setărilor proiectului",
       "projectSettingsTitle": "Setări proiect",
       "openSettingsMenu": "Deschide meniul setărilor",
-      "settingsTitle": "Setări"
+      "settingsTitle": "Setări",
+      "apiKeys": "Chei API"
     },
     "loadProjectFailed": "Proiectul nu a putut fi încărcat",
     "loadProjectsFailed": "Proiectele nu au putut fi încărcate",
@@ -1697,6 +1699,147 @@
       "githubRepository": "Depozit GitHub",
       "reportAnIssue": "Raportează o problemă",
       "sentryDocs": "Documentație SDK Sentry"
+    }
+  },
+  "projectApiKeys": {
+    "meta": {
+      "title": "Chei API"
+    },
+    "loadFailed": "Nu s-au putut încărca cheile API",
+    "title": "Chei API",
+    "subtitle": "Chei care permit scripturilor și serviciilor să citească și să scrie datele acestui proiect prin /api/v1.",
+    "create": {
+      "trigger": "Cheie API nouă",
+      "createdTitle": "Cheie API creată",
+      "createdDescription": "Copiază cheia acum. O poți recupera și mai târziu din listă.",
+      "copyKeyLabel": "Copiază cheia nouă",
+      "copyAgainHint": "Poți copia din nou această cheie oricând din listă.",
+      "done": "Terminat",
+      "title": "Creează cheie API",
+      "description": "Creează o cheie nouă limitată la acest proiect, pentru endpoint-urile /api/v1.",
+      "descriptionLabel": "Descriere (opțional)",
+      "descriptionPlaceholder": "de ex., Pipeline CI/CD",
+      "charCount": "{count}/{max} {count, plural, =1 {caracter} other {caractere}}",
+      "descriptionTooLong": "Descrierea poate avea cel mult {max} caractere",
+      "cancel": "Anulează",
+      "creating": "Se creează...",
+      "submit": "Creează cheia"
+    },
+    "copyKeyLabel": "Copiază cheia {label}",
+    "deleteKeyLabel": "Șterge cheia {label}",
+    "never": "Niciodată",
+    "neverUsed": "Niciodată folosită",
+    "createdOn": "Creată la {date}",
+    "usedOn": "Folosită {time}",
+    "columns": {
+      "key": "Cheie",
+      "description": "Descriere",
+      "created": "Creată",
+      "lastUsed": "Ultima utilizare"
+    },
+    "actionsLabel": "Acțiuni",
+    "toasts": {
+      "createFailed": "Crearea cheii a eșuat",
+      "created": "Cheie creată",
+      "createdHint": "Asigură-te că copiezi cheia acum.",
+      "deleted": "Cheie ștearsă",
+      "deleteFailed": "Ștergerea cheii a eșuat",
+      "getFailed": "Obținerea cheii a eșuat",
+      "copied": "Cheie copiată în clipboard",
+      "copyTitle": "Copiază cheia"
+    },
+    "empty": {
+      "title": "Încă nu există chei API",
+      "createFirst": "Creează prima cheie"
+    },
+    "list": {
+      "title": "Chei API ale proiectului",
+      "description": "Cheile autentifică suprafața /api/v1, limitate doar la acest proiect"
+    },
+    "deleteDialog": {
+      "title": "Revoci cheia?",
+      "description": "Aceasta va revoca definitiv cheia. Orice script sau serviciu care o folosește va pierde accesul imediat. Această acțiune nu poate fi anulată.",
+      "cancel": "Anulează",
+      "deleting": "Se revocă...",
+      "confirm": "Revocă"
+    }
+  },
+  "uptimeMonitors": {
+    "meta": {
+      "title": "Monitoare de disponibilitate"
+    },
+    "loadFailed": "Nu s-au putut încărca monitoarele de disponibilitate",
+    "title": "Monitoare de disponibilitate",
+    "subtitle": "Verificări HTTP/TCP active care urmăresc dacă endpoint-urile acestui proiect sunt accesibile.",
+    "disabled": "Dezactivat",
+    "empty": {
+      "title": "Încă nu există monitoare",
+      "createFirst": "Creează primul monitor"
+    },
+    "list": {
+      "title": "Monitoare",
+      "description": "Fiecare monitor este verificat la propriul interval și alertează la schimbări de stare"
+    },
+    "create": {
+      "trigger": "Monitor nou"
+    },
+    "columns": {
+      "name": "Nume",
+      "url": "URL",
+      "state": "Stare",
+      "interval": "Interval"
+    },
+    "actionsLabel": "Acțiuni",
+    "checkNowLabel": "Verifică {name} acum",
+    "editLabel": "Editează {name}",
+    "deleteLabel": "Șterge {name}",
+    "state": {
+      "loading": "Se încarcă",
+      "pending": "În așteptare",
+      "up": "Activ",
+      "down": "Nefuncțional",
+      "pending_up": "Se recuperează",
+      "pending_down": "Eșuează"
+    },
+    "form": {
+      "createTitle": "Creează monitor de disponibilitate",
+      "editTitle": "Editează monitorul de disponibilitate",
+      "description": "Verifică un URL la un interval și alertează la schimbări de stare.",
+      "name": "Nume",
+      "namePlaceholder": "de ex., Verificare sănătate producție",
+      "checkType": "Tip verificare",
+      "checkTypeHttp": "HTTP",
+      "checkTypeTcp": "TCP",
+      "url": "URL",
+      "intervalSecs": "Interval (secunde)",
+      "timeoutSecs": "Timeout (secunde)",
+      "failThreshold": "Prag de eșec",
+      "recoveryThreshold": "Prag de recuperare",
+      "expectedStatus": "Stare așteptată (opțional)",
+      "expectedStatusPlaceholder": "de ex., 200",
+      "repeatIntervalSecs": "Repetă alerta după (secunde)",
+      "enabled": "Activat",
+      "enabledDescription": "Monitoarele dezactivate nu sunt verificate conform programului.",
+      "cancel": "Anulează",
+      "saving": "Se salvează...",
+      "save": "Salvează modificările",
+      "submit": "Creează monitorul"
+    },
+    "deleteDialog": {
+      "title": "Ștergi monitorul?",
+      "description": "Acest lucru va șterge definitiv „{name}” și istoricul verificărilor sale. Această acțiune nu poate fi anulată.",
+      "cancel": "Anulează",
+      "deleting": "Se șterge...",
+      "confirm": "Șterge"
+    },
+    "toasts": {
+      "created": "Monitor creat",
+      "updated": "Monitor actualizat",
+      "deleted": "Monitor șters",
+      "deleteFailed": "Ștergerea monitorului a eșuat",
+      "checkFailed": "Executarea verificării a eșuat",
+      "checkOk": "Verificare reușită ({ms}ms)",
+      "checkFailedResult": "Verificarea a eșuat"
     }
   }
 }

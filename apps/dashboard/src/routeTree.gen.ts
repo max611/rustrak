@@ -29,6 +29,7 @@ import { Route as AuthenticatedSettingsTokensRouteImport } from './routes/_authe
 import { Route as AuthenticatedProjectsIdIndexRouteImport } from './routes/_authenticated/projects/$id/index';
 import { Route as AuthenticatedProjectsIdLogsRouteImport } from './routes/_authenticated/projects/$id/logs';
 import { Route as AuthenticatedProjectsIdSettingsRouteImport } from './routes/_authenticated/projects/$id/settings';
+import { Route as AuthenticatedProjectsIdUptimeMonitorsRouteImport } from './routes/_authenticated/projects/$id/uptime-monitors';
 import { Route as AuthenticatedProjectsIdAgentsIndexRouteImport } from './routes/_authenticated/projects/$id/agents/index';
 import { Route as AuthenticatedProjectsIdAgentsTraceIdRouteImport } from './routes/_authenticated/projects/$id/agents/$traceId';
 import { Route as AuthenticatedProjectsIdIssuesIndexRouteImport } from './routes/_authenticated/projects/$id/issues/index';
@@ -39,6 +40,7 @@ import { Route as AuthenticatedProjectsIdReleasesIndexRouteImport } from './rout
 import { Route as AuthenticatedProjectsIdReleasesReleaseRouteImport } from './routes/_authenticated/projects/$id/releases/$release';
 import { Route as AuthenticatedProjectsIdSettingsIndexRouteImport } from './routes/_authenticated/projects/$id/settings/index';
 import { Route as AuthenticatedProjectsIdSettingsAlertsRouteImport } from './routes/_authenticated/projects/$id/settings/alerts';
+import { Route as AuthenticatedProjectsIdSettingsApiKeysRouteImport } from './routes/_authenticated/projects/$id/settings/api-keys';
 import { Route as AuthenticatedProjectsIdSettingsClientKeysRouteImport } from './routes/_authenticated/projects/$id/settings/client-keys';
 import { Route as AuthenticatedProjectsIdSettingsGeneralRouteImport } from './routes/_authenticated/projects/$id/settings/general';
 import { Route as AuthenticatedProjectsIdSettingsMembersRouteImport } from './routes/_authenticated/projects/$id/settings/members';
@@ -158,6 +160,12 @@ const AuthenticatedProjectsIdSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedProjectsIdRoute,
   } as any);
+const AuthenticatedProjectsIdUptimeMonitorsRoute =
+  AuthenticatedProjectsIdUptimeMonitorsRouteImport.update({
+    id: '/uptime-monitors',
+    path: '/uptime-monitors',
+    getParentRoute: () => AuthenticatedProjectsIdRoute,
+  } as any);
 const AuthenticatedProjectsIdAgentsIndexRoute =
   AuthenticatedProjectsIdAgentsIndexRouteImport.update({
     id: '/agents/',
@@ -218,6 +226,12 @@ const AuthenticatedProjectsIdSettingsAlertsRoute =
     path: '/alerts',
     getParentRoute: () => AuthenticatedProjectsIdSettingsRoute,
   } as any);
+const AuthenticatedProjectsIdSettingsApiKeysRoute =
+  AuthenticatedProjectsIdSettingsApiKeysRouteImport.update({
+    id: '/api-keys',
+    path: '/api-keys',
+    getParentRoute: () => AuthenticatedProjectsIdSettingsRoute,
+  } as any);
 const AuthenticatedProjectsIdSettingsClientKeysRoute =
   AuthenticatedProjectsIdSettingsClientKeysRouteImport.update({
     id: '/client-keys',
@@ -274,12 +288,14 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute;
   '/projects/$id/logs': typeof AuthenticatedProjectsIdLogsRoute;
   '/projects/$id/settings': typeof AuthenticatedProjectsIdSettingsRouteWithChildren;
+  '/projects/$id/uptime-monitors': typeof AuthenticatedProjectsIdUptimeMonitorsRoute;
   '/projects/$id/': typeof AuthenticatedProjectsIdIndexRoute;
   '/projects/$id/agents/$traceId': typeof AuthenticatedProjectsIdAgentsTraceIdRoute;
   '/projects/$id/performance/$txnId': typeof AuthenticatedProjectsIdPerformanceTxnIdRoute;
   '/projects/$id/performance/summary': typeof AuthenticatedProjectsIdPerformanceSummaryRoute;
   '/projects/$id/releases/$release': typeof AuthenticatedProjectsIdReleasesReleaseRoute;
   '/projects/$id/settings/alerts': typeof AuthenticatedProjectsIdSettingsAlertsRoute;
+  '/projects/$id/settings/api-keys': typeof AuthenticatedProjectsIdSettingsApiKeysRoute;
   '/projects/$id/settings/client-keys': typeof AuthenticatedProjectsIdSettingsClientKeysRoute;
   '/projects/$id/settings/general': typeof AuthenticatedProjectsIdSettingsGeneralRoute;
   '/projects/$id/settings/members': typeof AuthenticatedProjectsIdSettingsMembersRoute;
@@ -308,12 +324,14 @@ export interface FileRoutesByTo {
   '/projects': typeof AuthenticatedProjectsIndexRoute;
   '/settings': typeof AuthenticatedSettingsIndexRoute;
   '/projects/$id/logs': typeof AuthenticatedProjectsIdLogsRoute;
+  '/projects/$id/uptime-monitors': typeof AuthenticatedProjectsIdUptimeMonitorsRoute;
   '/projects/$id': typeof AuthenticatedProjectsIdIndexRoute;
   '/projects/$id/agents/$traceId': typeof AuthenticatedProjectsIdAgentsTraceIdRoute;
   '/projects/$id/performance/$txnId': typeof AuthenticatedProjectsIdPerformanceTxnIdRoute;
   '/projects/$id/performance/summary': typeof AuthenticatedProjectsIdPerformanceSummaryRoute;
   '/projects/$id/releases/$release': typeof AuthenticatedProjectsIdReleasesReleaseRoute;
   '/projects/$id/settings/alerts': typeof AuthenticatedProjectsIdSettingsAlertsRoute;
+  '/projects/$id/settings/api-keys': typeof AuthenticatedProjectsIdSettingsApiKeysRoute;
   '/projects/$id/settings/client-keys': typeof AuthenticatedProjectsIdSettingsClientKeysRoute;
   '/projects/$id/settings/general': typeof AuthenticatedProjectsIdSettingsGeneralRoute;
   '/projects/$id/settings/members': typeof AuthenticatedProjectsIdSettingsMembersRoute;
@@ -347,12 +365,14 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute;
   '/_authenticated/projects/$id/logs': typeof AuthenticatedProjectsIdLogsRoute;
   '/_authenticated/projects/$id/settings': typeof AuthenticatedProjectsIdSettingsRouteWithChildren;
+  '/_authenticated/projects/$id/uptime-monitors': typeof AuthenticatedProjectsIdUptimeMonitorsRoute;
   '/_authenticated/projects/$id/': typeof AuthenticatedProjectsIdIndexRoute;
   '/_authenticated/projects/$id/agents/$traceId': typeof AuthenticatedProjectsIdAgentsTraceIdRoute;
   '/_authenticated/projects/$id/performance/$txnId': typeof AuthenticatedProjectsIdPerformanceTxnIdRoute;
   '/_authenticated/projects/$id/performance/summary': typeof AuthenticatedProjectsIdPerformanceSummaryRoute;
   '/_authenticated/projects/$id/releases/$release': typeof AuthenticatedProjectsIdReleasesReleaseRoute;
   '/_authenticated/projects/$id/settings/alerts': typeof AuthenticatedProjectsIdSettingsAlertsRoute;
+  '/_authenticated/projects/$id/settings/api-keys': typeof AuthenticatedProjectsIdSettingsApiKeysRoute;
   '/_authenticated/projects/$id/settings/client-keys': typeof AuthenticatedProjectsIdSettingsClientKeysRoute;
   '/_authenticated/projects/$id/settings/general': typeof AuthenticatedProjectsIdSettingsGeneralRoute;
   '/_authenticated/projects/$id/settings/members': typeof AuthenticatedProjectsIdSettingsMembersRoute;
@@ -386,12 +406,14 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/projects/$id/logs'
     | '/projects/$id/settings'
+    | '/projects/$id/uptime-monitors'
     | '/projects/$id/'
     | '/projects/$id/agents/$traceId'
     | '/projects/$id/performance/$txnId'
     | '/projects/$id/performance/summary'
     | '/projects/$id/releases/$release'
     | '/projects/$id/settings/alerts'
+    | '/projects/$id/settings/api-keys'
     | '/projects/$id/settings/client-keys'
     | '/projects/$id/settings/general'
     | '/projects/$id/settings/members'
@@ -420,12 +442,14 @@ export interface FileRouteTypes {
     | '/projects'
     | '/settings'
     | '/projects/$id/logs'
+    | '/projects/$id/uptime-monitors'
     | '/projects/$id'
     | '/projects/$id/agents/$traceId'
     | '/projects/$id/performance/$txnId'
     | '/projects/$id/performance/summary'
     | '/projects/$id/releases/$release'
     | '/projects/$id/settings/alerts'
+    | '/projects/$id/settings/api-keys'
     | '/projects/$id/settings/client-keys'
     | '/projects/$id/settings/general'
     | '/projects/$id/settings/members'
@@ -458,12 +482,14 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/projects/$id/logs'
     | '/_authenticated/projects/$id/settings'
+    | '/_authenticated/projects/$id/uptime-monitors'
     | '/_authenticated/projects/$id/'
     | '/_authenticated/projects/$id/agents/$traceId'
     | '/_authenticated/projects/$id/performance/$txnId'
     | '/_authenticated/projects/$id/performance/summary'
     | '/_authenticated/projects/$id/releases/$release'
     | '/_authenticated/projects/$id/settings/alerts'
+    | '/_authenticated/projects/$id/settings/api-keys'
     | '/_authenticated/projects/$id/settings/client-keys'
     | '/_authenticated/projects/$id/settings/general'
     | '/_authenticated/projects/$id/settings/members'
@@ -627,6 +653,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProjectsIdSettingsRouteImport;
       parentRoute: typeof AuthenticatedProjectsIdRoute;
     };
+    '/_authenticated/projects/$id/uptime-monitors': {
+      id: '/_authenticated/projects/$id/uptime-monitors';
+      path: '/uptime-monitors';
+      fullPath: '/projects/$id/uptime-monitors';
+      preLoaderRoute: typeof AuthenticatedProjectsIdUptimeMonitorsRouteImport;
+      parentRoute: typeof AuthenticatedProjectsIdRoute;
+    };
     '/_authenticated/projects/$id/agents/': {
       id: '/_authenticated/projects/$id/agents/';
       path: '/agents';
@@ -695,6 +728,13 @@ declare module '@tanstack/react-router' {
       path: '/alerts';
       fullPath: '/projects/$id/settings/alerts';
       preLoaderRoute: typeof AuthenticatedProjectsIdSettingsAlertsRouteImport;
+      parentRoute: typeof AuthenticatedProjectsIdSettingsRoute;
+    };
+    '/_authenticated/projects/$id/settings/api-keys': {
+      id: '/_authenticated/projects/$id/settings/api-keys';
+      path: '/api-keys';
+      fullPath: '/projects/$id/settings/api-keys';
+      preLoaderRoute: typeof AuthenticatedProjectsIdSettingsApiKeysRouteImport;
       parentRoute: typeof AuthenticatedProjectsIdSettingsRoute;
     };
     '/_authenticated/projects/$id/settings/client-keys': {
@@ -772,6 +812,7 @@ const AuthenticatedSettingsRouteWithChildren =
 
 interface AuthenticatedProjectsIdSettingsRouteChildren {
   AuthenticatedProjectsIdSettingsAlertsRoute: typeof AuthenticatedProjectsIdSettingsAlertsRoute;
+  AuthenticatedProjectsIdSettingsApiKeysRoute: typeof AuthenticatedProjectsIdSettingsApiKeysRoute;
   AuthenticatedProjectsIdSettingsClientKeysRoute: typeof AuthenticatedProjectsIdSettingsClientKeysRoute;
   AuthenticatedProjectsIdSettingsGeneralRoute: typeof AuthenticatedProjectsIdSettingsGeneralRoute;
   AuthenticatedProjectsIdSettingsMembersRoute: typeof AuthenticatedProjectsIdSettingsMembersRoute;
@@ -782,6 +823,8 @@ const AuthenticatedProjectsIdSettingsRouteChildren: AuthenticatedProjectsIdSetti
   {
     AuthenticatedProjectsIdSettingsAlertsRoute:
       AuthenticatedProjectsIdSettingsAlertsRoute,
+    AuthenticatedProjectsIdSettingsApiKeysRoute:
+      AuthenticatedProjectsIdSettingsApiKeysRoute,
     AuthenticatedProjectsIdSettingsClientKeysRoute:
       AuthenticatedProjectsIdSettingsClientKeysRoute,
     AuthenticatedProjectsIdSettingsGeneralRoute:
@@ -800,6 +843,7 @@ const AuthenticatedProjectsIdSettingsRouteWithChildren =
 interface AuthenticatedProjectsIdRouteChildren {
   AuthenticatedProjectsIdLogsRoute: typeof AuthenticatedProjectsIdLogsRoute;
   AuthenticatedProjectsIdSettingsRoute: typeof AuthenticatedProjectsIdSettingsRouteWithChildren;
+  AuthenticatedProjectsIdUptimeMonitorsRoute: typeof AuthenticatedProjectsIdUptimeMonitorsRoute;
   AuthenticatedProjectsIdIndexRoute: typeof AuthenticatedProjectsIdIndexRoute;
   AuthenticatedProjectsIdAgentsTraceIdRoute: typeof AuthenticatedProjectsIdAgentsTraceIdRoute;
   AuthenticatedProjectsIdPerformanceTxnIdRoute: typeof AuthenticatedProjectsIdPerformanceTxnIdRoute;
@@ -819,6 +863,8 @@ const AuthenticatedProjectsIdRouteChildren: AuthenticatedProjectsIdRouteChildren
     AuthenticatedProjectsIdLogsRoute: AuthenticatedProjectsIdLogsRoute,
     AuthenticatedProjectsIdSettingsRoute:
       AuthenticatedProjectsIdSettingsRouteWithChildren,
+    AuthenticatedProjectsIdUptimeMonitorsRoute:
+      AuthenticatedProjectsIdUptimeMonitorsRoute,
     AuthenticatedProjectsIdIndexRoute: AuthenticatedProjectsIdIndexRoute,
     AuthenticatedProjectsIdAgentsTraceIdRoute:
       AuthenticatedProjectsIdAgentsTraceIdRoute,

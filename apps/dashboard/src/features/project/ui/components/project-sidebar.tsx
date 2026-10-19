@@ -5,6 +5,7 @@ import {
   ChevronsLeft,
   ChevronsUpDown,
   LayoutDashboard,
+  Radio,
   Rocket,
   ScrollText,
   Settings,
@@ -197,6 +198,11 @@ export function ProjectSidebar({ projectId, projects }: ProjectSidebarProps) {
       href: `/projects/${projectId}/logs`,
       label: t('nav.logs'),
       icon: ScrollText,
+    },
+    {
+      href: `/projects/${projectId}/uptime-monitors`,
+      label: t('nav.uptimeMonitors'),
+      icon: Radio,
     },
     {
       href: `/projects/${projectId}/settings`,

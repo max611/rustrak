@@ -1,4 +1,10 @@
-import { Bell, KeyRound, SlidersHorizontal, Users } from 'lucide-react';
+import {
+  Bell,
+  KeyRound,
+  KeySquare,
+  SlidersHorizontal,
+  Users,
+} from 'lucide-react';
 import { useTranslations } from 'use-intl';
 import { cn } from '@/shared/lib/utils';
 import { Link } from '@/shared/ui/components/link';
@@ -32,6 +38,7 @@ const navGroups: NavGroup[] = [
     labelKey: 'nav.groupSdkSetup',
     items: [
       { segment: 'client-keys', labelKey: 'nav.clientKeys', icon: KeyRound },
+      { segment: 'api-keys', labelKey: 'nav.apiKeys', icon: KeySquare },
     ],
   },
 ];

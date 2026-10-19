@@ -505,7 +505,8 @@
       "performance": "Performance",
       "agents": "Agents",
       "logs": "Logs",
-      "settings": "Paramètres"
+      "settings": "Paramètres",
+      "uptimeMonitors": "Moniteurs de disponibilité"
     },
     "collapse": {
       "expand": "Développer",
@@ -1549,7 +1550,8 @@
       "openProjectSettingsMenu": "Ouvrir le menu des paramètres du projet",
       "projectSettingsTitle": "Paramètres du projet",
       "openSettingsMenu": "Ouvrir le menu des paramètres",
-      "settingsTitle": "Paramètres"
+      "settingsTitle": "Paramètres",
+      "apiKeys": "Clés API"
     },
     "loadProjectFailed": "Impossible de charger le projet",
     "loadProjectsFailed": "Impossible de charger les projets",
@@ -1697,6 +1699,147 @@
       "githubRepository": "Dépôt GitHub",
       "reportAnIssue": "Signaler un problème",
       "sentryDocs": "Documentation des SDK Sentry"
+    }
+  },
+  "projectApiKeys": {
+    "meta": {
+      "title": "Clés API"
+    },
+    "loadFailed": "Impossible de charger les clés API",
+    "title": "Clés API",
+    "subtitle": "Des clés permettant aux scripts et services de lire et écrire les données de ce projet via /api/v1.",
+    "create": {
+      "trigger": "Nouvelle clé API",
+      "createdTitle": "Clé API créée",
+      "createdDescription": "Copiez votre clé maintenant. Vous pourrez aussi la récupérer plus tard depuis la liste.",
+      "copyKeyLabel": "Copier la nouvelle clé",
+      "copyAgainHint": "Vous pouvez recopier cette clé à tout moment depuis la liste des clés.",
+      "done": "Terminé",
+      "title": "Créer une clé API",
+      "description": "Créez une nouvelle clé limitée à ce projet, à utiliser avec les endpoints /api/v1.",
+      "descriptionLabel": "Description (facultatif)",
+      "descriptionPlaceholder": "ex. : Pipeline CI/CD",
+      "charCount": "{count}/{max} {count, plural, =1 {caractère} other {caractères}}",
+      "descriptionTooLong": "La description doit comporter au maximum {max} caractères",
+      "cancel": "Annuler",
+      "creating": "Création...",
+      "submit": "Créer la clé"
+    },
+    "copyKeyLabel": "Copier la clé {label}",
+    "deleteKeyLabel": "Supprimer la clé {label}",
+    "never": "Jamais",
+    "neverUsed": "Jamais utilisée",
+    "createdOn": "Créée le {date}",
+    "usedOn": "Utilisée {time}",
+    "columns": {
+      "key": "Clé",
+      "description": "Description",
+      "created": "Créée",
+      "lastUsed": "Dernière utilisation"
+    },
+    "actionsLabel": "Actions",
+    "toasts": {
+      "createFailed": "Échec de la création de la clé",
+      "created": "Clé créée",
+      "createdHint": "Assurez-vous de copier votre clé maintenant.",
+      "deleted": "Clé supprimée",
+      "deleteFailed": "Échec de la suppression de la clé",
+      "getFailed": "Échec de la récupération de la clé",
+      "copied": "Clé copiée dans le presse-papiers",
+      "copyTitle": "Copier la clé"
+    },
+    "empty": {
+      "title": "Aucune clé API pour le moment",
+      "createFirst": "Créez votre première clé"
+    },
+    "list": {
+      "title": "Clés API du projet",
+      "description": "Les clés authentifient la surface /api/v1, limitée à ce seul projet"
+    },
+    "deleteDialog": {
+      "title": "Révoquer la clé ?",
+      "description": "Cette clé sera révoquée définitivement. Tout script ou service l'utilisant perdra immédiatement l'accès. Cette action est irréversible.",
+      "cancel": "Annuler",
+      "deleting": "Révocation...",
+      "confirm": "Révoquer"
+    }
+  },
+  "uptimeMonitors": {
+    "meta": {
+      "title": "Moniteurs de disponibilité"
+    },
+    "loadFailed": "Impossible de charger les moniteurs de disponibilité",
+    "title": "Moniteurs de disponibilité",
+    "subtitle": "Des contrôles HTTP/TCP actifs qui surveillent l'accessibilité des endpoints de ce projet.",
+    "disabled": "Désactivé",
+    "empty": {
+      "title": "Aucun moniteur pour le moment",
+      "createFirst": "Créez votre premier moniteur"
+    },
+    "list": {
+      "title": "Moniteurs",
+      "description": "Chaque moniteur est sondé selon son propre intervalle et alerte en cas de changement d'état"
+    },
+    "create": {
+      "trigger": "Nouveau moniteur"
+    },
+    "columns": {
+      "name": "Nom",
+      "url": "URL",
+      "state": "État",
+      "interval": "Intervalle"
+    },
+    "actionsLabel": "Actions",
+    "checkNowLabel": "Vérifier {name} maintenant",
+    "editLabel": "Modifier {name}",
+    "deleteLabel": "Supprimer {name}",
+    "state": {
+      "loading": "Chargement",
+      "pending": "En attente",
+      "up": "Actif",
+      "down": "En panne",
+      "pending_up": "Récupération",
+      "pending_down": "Échec en cours"
+    },
+    "form": {
+      "createTitle": "Créer un moniteur de disponibilité",
+      "editTitle": "Modifier le moniteur de disponibilité",
+      "description": "Sonde une URL selon un intervalle et alerte en cas de changement d'état.",
+      "name": "Nom",
+      "namePlaceholder": "ex. : Vérification de santé en production",
+      "checkType": "Type de contrôle",
+      "checkTypeHttp": "HTTP",
+      "checkTypeTcp": "TCP",
+      "url": "URL",
+      "intervalSecs": "Intervalle (secondes)",
+      "timeoutSecs": "Délai d'expiration (secondes)",
+      "failThreshold": "Seuil d'échec",
+      "recoveryThreshold": "Seuil de récupération",
+      "expectedStatus": "Statut attendu (facultatif)",
+      "expectedStatusPlaceholder": "ex. : 200",
+      "repeatIntervalSecs": "Répéter l'alerte après (secondes)",
+      "enabled": "Activé",
+      "enabledDescription": "Les moniteurs désactivés ne sont pas sondés selon leur planning.",
+      "cancel": "Annuler",
+      "saving": "Enregistrement...",
+      "save": "Enregistrer les modifications",
+      "submit": "Créer le moniteur"
+    },
+    "deleteDialog": {
+      "title": "Supprimer le moniteur ?",
+      "description": "Cela supprimera définitivement « {name} » et son historique de contrôles. Cette action est irréversible.",
+      "cancel": "Annuler",
+      "deleting": "Suppression...",
+      "confirm": "Supprimer"
+    },
+    "toasts": {
+      "created": "Moniteur créé",
+      "updated": "Moniteur mis à jour",
+      "deleted": "Moniteur supprimé",
+      "deleteFailed": "Échec de la suppression du moniteur",
+      "checkFailed": "Échec de l'exécution du contrôle",
+      "checkOk": "Contrôle réussi ({ms}ms)",
+      "checkFailedResult": "Le contrôle a échoué"
     }
   }
 }

@@ -12,6 +12,7 @@ import {
   LogsResource,
   MembersResource,
   MonitorsResource,
+  ProjectApiKeysResource,
   ProjectsResource,
   ReleasesResource,
   SessionsResource,
@@ -22,6 +23,7 @@ import {
   TeamResource,
   TokensResource,
   TransactionsResource,
+  UptimeMonitorsResource,
 } from './resources/index.js';
 import { createKyInstance } from './utils/index.js';
 
@@ -149,6 +151,16 @@ export class RustrakClient {
   public readonly storage: StorageResource;
 
   /**
+   * Project API Keys resource (per-project secret authenticating /api/v1/*)
+   */
+  public readonly projectApiKeys: ProjectApiKeysResource;
+
+  /**
+   * Uptime Monitors resource (active HTTP/TCP probing)
+   */
+  public readonly uptimeMonitors: UptimeMonitorsResource;
+
+  /**
    * Health API resource (version info)
    */
   public readonly health: HealthResource;
@@ -183,5 +195,7 @@ export class RustrakClient {
     this.monitors = new MonitorsResource(this.http);
     this.storage = new StorageResource(this.http);
     this.health = new HealthResource(this.http);
+    this.projectApiKeys = new ProjectApiKeysResource(this.http);
+    this.uptimeMonitors = new UptimeMonitorsResource(this.http);
   }
 }

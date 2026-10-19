@@ -505,7 +505,8 @@
       "performance": "性能",
       "agents": "智能体",
       "logs": "日志",
-      "settings": "设置"
+      "settings": "设置",
+      "uptimeMonitors": "可用性监控"
     },
     "collapse": {
       "expand": "展开",
@@ -1549,7 +1550,8 @@
       "openProjectSettingsMenu": "打开项目设置菜单",
       "projectSettingsTitle": "项目设置",
       "openSettingsMenu": "打开设置菜单",
-      "settingsTitle": "设置"
+      "settingsTitle": "设置",
+      "apiKeys": "API 密钥"
     },
     "loadProjectFailed": "无法加载项目",
     "loadProjectsFailed": "无法加载项目",
@@ -1697,6 +1699,147 @@
       "githubRepository": "GitHub 仓库",
       "reportAnIssue": "报告问题",
       "sentryDocs": "Sentry SDK 文档"
+    }
+  },
+  "projectApiKeys": {
+    "meta": {
+      "title": "API 密钥"
+    },
+    "loadFailed": "无法加载 API 密钥",
+    "title": "API 密钥",
+    "subtitle": "允许脚本和服务通过 /api/v1 读写此项目数据的密钥。",
+    "create": {
+      "trigger": "新建 API 密钥",
+      "createdTitle": "API 密钥已创建",
+      "createdDescription": "请立即复制您的密钥。您也可以稍后从列表中获取。",
+      "copyKeyLabel": "复制新密钥",
+      "copyAgainHint": "您可以随时从密钥列表中再次复制此密钥。",
+      "done": "完成",
+      "title": "创建 API 密钥",
+      "description": "创建一个仅限此项目使用的新密钥，用于 /api/v1 接口。",
+      "descriptionLabel": "描述（可选）",
+      "descriptionPlaceholder": "例如：CI/CD 流水线",
+      "charCount": "{count}/{max} 个字符",
+      "descriptionTooLong": "描述最多 {max} 个字符",
+      "cancel": "取消",
+      "creating": "正在创建...",
+      "submit": "创建密钥"
+    },
+    "copyKeyLabel": "复制密钥 {label}",
+    "deleteKeyLabel": "删除密钥 {label}",
+    "never": "从未",
+    "neverUsed": "从未使用",
+    "createdOn": "创建于 {date}",
+    "usedOn": "使用于 {time}",
+    "columns": {
+      "key": "密钥",
+      "description": "描述",
+      "created": "创建时间",
+      "lastUsed": "最后使用"
+    },
+    "actionsLabel": "操作",
+    "toasts": {
+      "createFailed": "创建密钥失败",
+      "created": "密钥已创建",
+      "createdHint": "请立即复制您的密钥。",
+      "deleted": "密钥已删除",
+      "deleteFailed": "删除密钥失败",
+      "getFailed": "获取密钥失败",
+      "copied": "密钥已复制到剪贴板",
+      "copyTitle": "复制密钥"
+    },
+    "empty": {
+      "title": "暂无 API 密钥",
+      "createFirst": "创建您的第一个密钥"
+    },
+    "list": {
+      "title": "项目 API 密钥",
+      "description": "密钥用于验证 /api/v1 接口，仅限此项目使用"
+    },
+    "deleteDialog": {
+      "title": "撤销密钥？",
+      "description": "这将永久撤销此密钥。任何使用该密钥的脚本或服务将立即失去访问权限。此操作无法撤销。",
+      "cancel": "取消",
+      "deleting": "正在撤销...",
+      "confirm": "撤销"
+    }
+  },
+  "uptimeMonitors": {
+    "meta": {
+      "title": "可用性监控"
+    },
+    "loadFailed": "无法加载可用性监控",
+    "title": "可用性监控",
+    "subtitle": "主动的 HTTP/TCP 检测，用于监控此项目的端点是否可访问。",
+    "disabled": "已禁用",
+    "empty": {
+      "title": "暂无监控项",
+      "createFirst": "创建您的第一个监控项"
+    },
+    "list": {
+      "title": "监控项",
+      "description": "每个监控项按自己的时间间隔进行检测，并在状态变化时发出告警"
+    },
+    "create": {
+      "trigger": "新建监控项"
+    },
+    "columns": {
+      "name": "名称",
+      "url": "URL",
+      "state": "状态",
+      "interval": "间隔"
+    },
+    "actionsLabel": "操作",
+    "checkNowLabel": "立即检查 {name}",
+    "editLabel": "编辑 {name}",
+    "deleteLabel": "删除 {name}",
+    "state": {
+      "loading": "加载中",
+      "pending": "待定",
+      "up": "正常",
+      "down": "故障",
+      "pending_up": "恢复中",
+      "pending_down": "异常中"
+    },
+    "form": {
+      "createTitle": "创建可用性监控",
+      "editTitle": "编辑可用性监控",
+      "description": "按设定的时间间隔检测一个 URL，并在状态变化时发出告警。",
+      "name": "名称",
+      "namePlaceholder": "例如：生产环境健康检查",
+      "checkType": "检测类型",
+      "checkTypeHttp": "HTTP",
+      "checkTypeTcp": "TCP",
+      "url": "URL",
+      "intervalSecs": "间隔（秒）",
+      "timeoutSecs": "超时（秒）",
+      "failThreshold": "失败阈值",
+      "recoveryThreshold": "恢复阈值",
+      "expectedStatus": "期望状态码（可选）",
+      "expectedStatusPlaceholder": "例如：200",
+      "repeatIntervalSecs": "重复告警间隔（秒）",
+      "enabled": "已启用",
+      "enabledDescription": "已禁用的监控项不会按计划进行检测。",
+      "cancel": "取消",
+      "saving": "正在保存...",
+      "save": "保存更改",
+      "submit": "创建监控项"
+    },
+    "deleteDialog": {
+      "title": "删除监控项？",
+      "description": "这将永久删除“{name}”及其检测历史记录。此操作无法撤销。",
+      "cancel": "取消",
+      "deleting": "正在删除...",
+      "confirm": "删除"
+    },
+    "toasts": {
+      "created": "监控项已创建",
+      "updated": "监控项已更新",
+      "deleted": "监控项已删除",
+      "deleteFailed": "删除监控项失败",
+      "checkFailed": "执行检查失败",
+      "checkOk": "检查成功（{ms}ms）",
+      "checkFailedResult": "检查失败"
     }
   }
 }

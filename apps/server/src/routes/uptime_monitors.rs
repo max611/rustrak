@@ -74,6 +74,28 @@ pub async fn get_monitor(
     Ok(HttpResponse::Ok().json(monitor))
 }
 
+/// GET /api/projects/{project_id}/uptime-monitors/{id}/state — current
+/// up/down state machine row (absent until the scheduler's first tick).
+pub async fn get_monitor_state(
+    pool: web::Data<DbPool>,
+    path: web::Path<(i32, Uuid)>,
+    actor: ApiActor,
+) -> AppResult<HttpResponse> {
+    let (project_id, id) = path.into_inner();
+    access::require(
+        pool.get_ref(),
+        actor.is_admin(),
+        actor.user_id(),
+        project_id,
+        Action::ViewProject,
+    )
+    .await?;
+
+    get_owned_monitor(pool.get_ref(), project_id, id).await?;
+    let state = UptimeMonitorService::get_state(pool.get_ref(), id).await?;
+    Ok(HttpResponse::Ok().json(state))
+}
+
 /// POST /api/projects/{project_id}/uptime-monitors — create a monitor
 pub async fn create_monitor(
     pool: web::Data<DbPool>,
@@ -254,6 +276,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
             .route("/{id}", web::get().to(get_monitor))
             .route("/{id}", web::patch().to(update_monitor))
             .route("/{id}", web::delete().to(delete_monitor))
+            .route("/{id}/state", web::get().to(get_monitor_state))
             .route("/{id}/check", web::post().to(trigger_check))
             .route("/{id}/channels", web::put().to(put_monitor_channels)),
     );

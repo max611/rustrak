@@ -64,6 +64,42 @@ pub async fn list_keys(
 }
 
 #[cfg_attr(feature = "openapi", utoipa::path(
+    get,
+    path = "/api/projects/{project_id}/api-keys/{id}",
+    tag = "ProjectApiKeys",
+    params(
+        ("project_id" = i32, Path, description = "Project ID"),
+        ("id" = i32, Path, description = "Key ID"),
+    ),
+    responses(
+        (status = 200, description = "Key details (full key value)", body = ProjectApiKeyCreatedResponse),
+        (status = 401, description = "Unauthorized", body = crate::error::ErrorResponse),
+        (status = 404, description = "Not found", body = crate::error::ErrorResponse),
+    ),
+    security(("bearer_auth" = [])),
+))]
+/// GET /api/projects/{project_id}/api-keys/{id} — reveal the full key value,
+/// mirroring routes::tokens::get_token's "GET reveals it again" convention.
+pub async fn get_key(
+    pool: web::Data<DbPool>,
+    path: web::Path<(i32, i32)>,
+    actor: ApiActor,
+) -> AppResult<HttpResponse> {
+    let (project_id, id) = path.into_inner();
+    access::require(
+        pool.get_ref(),
+        actor.is_admin(),
+        actor.user_id(),
+        project_id,
+        Action::UpdateProject,
+    )
+    .await?;
+
+    let key = get_owned_key(pool.get_ref(), project_id, id).await?;
+    Ok(HttpResponse::Ok().json(key.to_created_response()))
+}
+
+#[cfg_attr(feature = "openapi", utoipa::path(
     post,
     path = "/api/projects/{project_id}/api-keys",
     tag = "ProjectApiKeys",
@@ -138,7 +174,7 @@ pub async fn delete_key(
 #[cfg(feature = "openapi")]
 #[derive(OpenApi)]
 #[openapi(
-    paths(list_keys, create_key, delete_key),
+    paths(list_keys, create_key, get_key, delete_key),
     components(schemas(
         crate::models::ProjectApiKeyResponse,
         crate::models::ProjectApiKeyCreatedResponse,
@@ -153,6 +189,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
         web::scope("/api/projects/{project_id}/api-keys")
             .route("", web::get().to(list_keys))
             .route("", web::post().to(create_key))
+            .route("/{id}", web::get().to(get_key))
             .route("/{id}", web::delete().to(delete_key)),
     );
 }

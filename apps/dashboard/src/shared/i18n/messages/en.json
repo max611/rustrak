@@ -505,7 +505,8 @@
       "performance": "Performance",
       "agents": "Agents",
       "logs": "Logs",
-      "settings": "Settings"
+      "settings": "Settings",
+      "uptimeMonitors": "Uptime Monitors"
     },
     "collapse": {
       "expand": "Expand",
@@ -1549,7 +1550,8 @@
       "openProjectSettingsMenu": "Open project settings menu",
       "projectSettingsTitle": "Project Settings",
       "openSettingsMenu": "Open settings menu",
-      "settingsTitle": "Settings"
+      "settingsTitle": "Settings",
+      "apiKeys": "API Keys"
     },
     "loadProjectFailed": "Could not load project",
     "loadProjectsFailed": "Could not load projects",
@@ -1697,6 +1699,147 @@
       "githubRepository": "GitHub Repository",
       "reportAnIssue": "Report an Issue",
       "sentryDocs": "Sentry SDK Documentation"
+    }
+  },
+  "projectApiKeys": {
+    "meta": {
+      "title": "API Keys"
+    },
+    "loadFailed": "Failed to load API keys",
+    "title": "API Keys",
+    "subtitle": "Keys that let scripts and services read and write this project's data via /api/v1.",
+    "create": {
+      "trigger": "New API Key",
+      "createdTitle": "API Key Created",
+      "createdDescription": "Copy your key now. You can also retrieve it later from the list.",
+      "copyKeyLabel": "Copy the new key",
+      "copyAgainHint": "You can copy this key again anytime from the key list.",
+      "done": "Done",
+      "title": "Create API Key",
+      "description": "Create a new key scoped to this project, for use with the /api/v1 endpoints.",
+      "descriptionLabel": "Description (optional)",
+      "descriptionPlaceholder": "e.g., CI/CD Pipeline",
+      "charCount": "{count}/{max} {count, plural, =1 {character} other {characters}}",
+      "descriptionTooLong": "Description must be at most {max} characters",
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "submit": "Create Key"
+    },
+    "copyKeyLabel": "Copy key {label}",
+    "deleteKeyLabel": "Delete key {label}",
+    "never": "Never",
+    "neverUsed": "Never used",
+    "createdOn": "Created {date}",
+    "usedOn": "Used {time}",
+    "columns": {
+      "key": "Key",
+      "description": "Description",
+      "created": "Created",
+      "lastUsed": "Last used"
+    },
+    "actionsLabel": "Actions",
+    "toasts": {
+      "createFailed": "Failed to create key",
+      "created": "Key created",
+      "createdHint": "Make sure to copy your key now.",
+      "deleted": "Key deleted",
+      "deleteFailed": "Failed to delete key",
+      "getFailed": "Failed to get key",
+      "copied": "Key copied to clipboard",
+      "copyTitle": "Copy the key"
+    },
+    "empty": {
+      "title": "No API keys yet",
+      "createFirst": "Create your first key"
+    },
+    "list": {
+      "title": "Project API Keys",
+      "description": "Keys authenticate the /api/v1 surface, scoped to this project only"
+    },
+    "deleteDialog": {
+      "title": "Revoke Key?",
+      "description": "This will permanently revoke this key. Any scripts or services using it will lose access immediately. This action cannot be undone.",
+      "cancel": "Cancel",
+      "deleting": "Revoking...",
+      "confirm": "Revoke"
+    }
+  },
+  "uptimeMonitors": {
+    "meta": {
+      "title": "Uptime Monitors"
+    },
+    "loadFailed": "Failed to load uptime monitors",
+    "title": "Uptime Monitors",
+    "subtitle": "Active HTTP/TCP checks that watch whether this project's endpoints are reachable.",
+    "disabled": "Disabled",
+    "empty": {
+      "title": "No uptime monitors yet",
+      "createFirst": "Create your first monitor"
+    },
+    "list": {
+      "title": "Monitors",
+      "description": "Each monitor is probed on its own interval and alerts on state changes"
+    },
+    "create": {
+      "trigger": "New Monitor"
+    },
+    "columns": {
+      "name": "Name",
+      "url": "URL",
+      "state": "State",
+      "interval": "Interval"
+    },
+    "actionsLabel": "Actions",
+    "checkNowLabel": "Check {name} now",
+    "editLabel": "Edit {name}",
+    "deleteLabel": "Delete {name}",
+    "state": {
+      "loading": "Loading",
+      "pending": "Pending",
+      "up": "Up",
+      "down": "Down",
+      "pending_up": "Recovering",
+      "pending_down": "Failing"
+    },
+    "form": {
+      "createTitle": "Create Uptime Monitor",
+      "editTitle": "Edit Uptime Monitor",
+      "description": "Probes a URL on an interval and alerts on state changes.",
+      "name": "Name",
+      "namePlaceholder": "e.g., Production health check",
+      "checkType": "Check type",
+      "checkTypeHttp": "HTTP",
+      "checkTypeTcp": "TCP",
+      "url": "URL",
+      "intervalSecs": "Interval (seconds)",
+      "timeoutSecs": "Timeout (seconds)",
+      "failThreshold": "Fail threshold",
+      "recoveryThreshold": "Recovery threshold",
+      "expectedStatus": "Expected status (optional)",
+      "expectedStatusPlaceholder": "e.g., 200",
+      "repeatIntervalSecs": "Repeat alert after (seconds)",
+      "enabled": "Enabled",
+      "enabledDescription": "Disabled monitors are not probed on their schedule.",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save Changes",
+      "submit": "Create Monitor"
+    },
+    "deleteDialog": {
+      "title": "Delete Monitor?",
+      "description": "This will permanently delete “{name}” and its check history. This action cannot be undone.",
+      "cancel": "Cancel",
+      "deleting": "Deleting...",
+      "confirm": "Delete"
+    },
+    "toasts": {
+      "created": "Monitor created",
+      "updated": "Monitor updated",
+      "deleted": "Monitor deleted",
+      "deleteFailed": "Failed to delete monitor",
+      "checkFailed": "Failed to run check",
+      "checkOk": "Check succeeded ({ms}ms)",
+      "checkFailedResult": "Check failed"
     }
   }
 }
