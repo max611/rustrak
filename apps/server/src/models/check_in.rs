@@ -160,6 +160,15 @@ fn trim_to_chars(s: &mut String, max: usize) {
     }
 }
 
+/// DTO for assigning notification channels (alert integrations) to a
+/// monitor (replaces existing assignments) — mirrors
+/// `uptime_monitor::AssignUptimeMonitorChannels`.
+#[derive(Debug, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
+pub struct AssignMonitorChannels {
+    pub integration_ids: Vec<i32>,
+}
+
 /// A monitor (scheduled job) in the list view.
 #[derive(Debug, Serialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]

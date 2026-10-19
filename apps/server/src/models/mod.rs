@@ -100,7 +100,7 @@ pub use alert::{
     WebhookRoutingOverride,
 };
 pub use auth_token::{AuthToken, AuthTokenCreatedResponse, AuthTokenResponse, CreateAuthToken};
-pub use check_in::{CheckInResponse, MonitorResponse};
+pub use check_in::{AssignMonitorChannels, CheckInResponse, MonitorResponse};
 pub use event::{Event, EventDetailResponse, EventResponse, EventSummary};
 pub use gen_ai::{
     AgentDurationPoint, AgentModelRow, AgentSummary, AgentTimeseriesPoint, AgentToolRow,

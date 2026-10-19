@@ -172,7 +172,11 @@ async fn main() -> std::io::Result<()> {
 
     // Spawn monitor worker (Crons missed/timeout detection)
     {
-        let worker = MonitorWorker::new(db_pool.clone(), config.monitor_tick_interval_secs);
+        let worker = MonitorWorker::new(
+            db_pool.clone(),
+            config.monitor_tick_interval_secs,
+            config.dashboard_url(),
+        );
         tokio::spawn(worker.run());
     }
 

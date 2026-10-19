@@ -1,8 +1,9 @@
 //! Monitor service: schedule math + read queries for Sentry Crons.
 
 use crate::db::DbPool;
-use crate::error::AppResult;
+use crate::error::{AppError, AppResult};
 use crate::models::check_in::{CheckInResponse, MonitorResponse};
+use crate::services::notification::create_dispatcher;
 use chrono::{DateTime, Duration, Months, Utc};
 use chrono_tz::Tz;
 use cron::Schedule;
@@ -114,13 +115,17 @@ impl MonitorService {
     /// check-in in history, and advances `next_expected_at` to the next
     /// occurrence so the same miss does not fire again. Returns the number of
     /// monitors transitioned. `now` is injected for testability.
-    pub async fn process_overdue(pool: &DbPool, now: DateTime<Utc>) -> AppResult<usize> {
-        Self::process_timeouts(pool, now).await?;
+    pub async fn process_overdue(
+        pool: &DbPool,
+        now: DateTime<Utc>,
+        dashboard_url: &str,
+    ) -> AppResult<usize> {
+        Self::process_timeouts(pool, now, dashboard_url).await?;
 
         let candidates = sqlx::query(
             r#"
-            SELECT id, schedule_type, schedule_value, schedule_unit, timezone,
-                   checkin_margin, next_expected_at
+            SELECT id, project_id, slug, schedule_type, schedule_value, schedule_unit,
+                   timezone, checkin_margin, next_expected_at
             FROM monitors
             WHERE next_expected_at IS NOT NULL
               AND status NOT IN ('missed', 'disabled')
@@ -142,6 +147,8 @@ impl MonitorService {
             }
 
             let monitor_id: Uuid = row.get("id");
+            let project_id: i32 = row.get("project_id");
+            let slug: String = row.get("slug");
 
             // Advance the deadline past `now` from the schedule, so the next
             // tick has a fresh target instead of re-detecting this miss.
@@ -193,6 +200,13 @@ impl MonitorService {
 
             tx.commit().await?;
             transitioned += 1;
+
+            if let Err(e) =
+                Self::dispatch_alert(pool, monitor_id, project_id, &slug, "missed", dashboard_url)
+                    .await
+            {
+                log::warn!("Failed to dispatch missed-monitor alert for {monitor_id}: {e:?}");
+            }
         }
 
         Ok(transitioned)
@@ -201,11 +215,16 @@ impl MonitorService {
     /// Times out in-progress check-ins whose run has exceeded the monitor's
     /// `max_runtime` (minutes): the check-in row becomes `timeout` and its
     /// monitor follows. Runs in Rust to keep the minute arithmetic dialect-safe.
-    async fn process_timeouts(pool: &DbPool, now: DateTime<Utc>) -> AppResult<()> {
+    async fn process_timeouts(
+        pool: &DbPool,
+        now: DateTime<Utc>,
+        dashboard_url: &str,
+    ) -> AppResult<()> {
         let open = sqlx::query(
             r#"
             SELECT ci.id AS check_in_id, ci.timestamp AS started_at,
-                   ci.monitor_id AS monitor_id, m.max_runtime AS max_runtime
+                   ci.monitor_id AS monitor_id, m.max_runtime AS max_runtime,
+                   m.project_id AS project_id, m.slug AS slug
             FROM check_ins ci
             JOIN monitors m ON m.id = ci.monitor_id
             WHERE ci.status = 'in_progress' AND m.max_runtime IS NOT NULL
@@ -223,6 +242,8 @@ impl MonitorService {
 
             let check_in_id: Uuid = row.get("check_in_id");
             let monitor_id: Uuid = row.get("monitor_id");
+            let project_id: i32 = row.get("project_id");
+            let slug: String = row.get("slug");
 
             let mut tx = pool.begin().await?;
             sqlx::query("UPDATE check_ins SET status = 'timeout', duration = $1 WHERE id = $2")
@@ -238,6 +259,197 @@ impl MonitorService {
             .execute(&mut *tx)
             .await?;
             tx.commit().await?;
+
+            if let Err(e) =
+                Self::dispatch_alert(pool, monitor_id, project_id, &slug, "timeout", dashboard_url)
+                    .await
+            {
+                log::warn!("Failed to dispatch timed-out-monitor alert for {monitor_id}: {e:?}");
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Replaces all alert-integration assignments for a monitor.
+    pub async fn assign_channels(
+        pool: &DbPool,
+        monitor_id: Uuid,
+        integration_ids: Vec<i32>,
+    ) -> AppResult<()> {
+        let mut tx = pool.begin().await?;
+
+        #[cfg(feature = "postgres")]
+        let exists: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM monitors WHERE id = $1)")
+            .bind(monitor_id)
+            .fetch_one(&mut *tx)
+            .await?;
+
+        #[cfg(feature = "sqlite")]
+        let exists: bool = {
+            let count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM monitors WHERE id = $1")
+                .bind(monitor_id.to_string())
+                .fetch_one(&mut *tx)
+                .await?;
+            count > 0
+        };
+
+        if !exists {
+            return Err(AppError::NotFound(format!("Monitor {monitor_id} not found")));
+        }
+
+        sqlx::query("DELETE FROM monitor_alert_channels WHERE monitor_id = $1")
+            .bind(monitor_id)
+            .execute(&mut *tx)
+            .await?;
+
+        for integration_id in integration_ids {
+            sqlx::query(
+                "INSERT INTO monitor_alert_channels (monitor_id, integration_id) VALUES ($1, $2)",
+            )
+            .bind(monitor_id)
+            .bind(integration_id)
+            .execute(&mut *tx)
+            .await
+            .map_err(|e| {
+                if let sqlx::Error::Database(ref db_err) = e {
+                    if db_err.is_foreign_key_violation() {
+                        return AppError::NotFound(format!("Integration {integration_id} not found"));
+                    }
+                }
+                AppError::Database(e)
+            })?;
+        }
+
+        tx.commit().await?;
+
+        Ok(())
+    }
+
+    /// Loads notification channels linked to a monitor.
+    /// Returns `Vec<(provider_type, credentials_json, name)>`.
+    async fn load_channels(
+        pool: &DbPool,
+        monitor_id: Uuid,
+    ) -> AppResult<Vec<(String, serde_json::Value, String)>> {
+        #[cfg(feature = "postgres")]
+        let rows: Vec<(String, serde_json::Value, String)> = sqlx::query_as(
+            r#"
+            SELECT nc.provider_type, nc.credentials, nc.name
+            FROM alert_integrations nc
+            JOIN monitor_alert_channels mac ON nc.id = mac.integration_id
+            WHERE mac.monitor_id = $1 AND nc.is_enabled = TRUE
+            "#,
+        )
+        .bind(monitor_id)
+        .fetch_all(pool)
+        .await?;
+
+        #[cfg(feature = "sqlite")]
+        let rows: Vec<(String, serde_json::Value, String)> = sqlx::query_as(
+            r#"
+            SELECT nc.provider_type, nc.credentials, nc.name
+            FROM alert_integrations nc
+            JOIN monitor_alert_channels mac ON nc.id = mac.integration_id
+            WHERE mac.monitor_id = $1 AND nc.is_enabled = 1
+            "#,
+        )
+        .bind(monitor_id.to_string())
+        .fetch_all(pool)
+        .await?;
+
+        Ok(rows)
+    }
+
+    /// Dispatches a missed/timed-out alert to every channel assigned to this
+    /// monitor. Mirrors `services::uptime::scheduler::dispatch_alert` — same
+    /// synthetic-`AlertIntegration` approach, since there is no per-rule
+    /// routing_override for monitors either.
+    async fn dispatch_alert(
+        pool: &DbPool,
+        monitor_id: Uuid,
+        project_id: i32,
+        slug: &str,
+        alert_type: &str,
+        dashboard_url: &str,
+    ) -> AppResult<()> {
+        let channels = Self::load_channels(pool, monitor_id).await?;
+
+        if channels.is_empty() {
+            return Ok(());
+        }
+
+        let project = crate::services::ProjectService::get_by_id(pool, project_id).await?;
+
+        use crate::models::{AlertIntegration, AlertPayload, IssueInfo, ProjectInfo};
+
+        let payload = AlertPayload {
+            alert_id: format!("monitor-{monitor_id}-{}", Utc::now().timestamp_millis()),
+            alert_type: alert_type.to_string(),
+            triggered_at: Utc::now(),
+            project: ProjectInfo {
+                id: project.id,
+                name: project.name.clone(),
+                slug: project.slug.clone(),
+            },
+            issue: IssueInfo {
+                id: monitor_id.to_string(),
+                short_id: format!("CRON-{}", &monitor_id.to_string()[..8]),
+                title: format!("Monitor '{slug}' {alert_type}"),
+                level: Some("error".to_string()),
+                first_seen: Utc::now(),
+                last_seen: Utc::now(),
+                event_count: 1,
+            },
+            issue_url: format!(
+                "{}/projects/{}/crons/{}",
+                dashboard_url.trim_end_matches('/'),
+                project.id,
+                monitor_id
+            ),
+            actor: "Rustrak Crons".to_string(),
+        };
+
+        for (provider_type_str, credentials, channel_name) in channels {
+            let provider_type = match provider_type_str.as_str() {
+                "webhook" => crate::models::ProviderType::Webhook,
+                "custom_webhook" => crate::models::ProviderType::CustomWebhook,
+                "email" => crate::models::ProviderType::Email,
+                "slack" => crate::models::ProviderType::Slack,
+                other => {
+                    log::warn!("Unknown provider type '{other}', skipping");
+                    continue;
+                }
+            };
+
+            let dispatcher = create_dispatcher(provider_type.clone());
+
+            let synthetic_integration = AlertIntegration {
+                id: 0,
+                name: channel_name.clone(),
+                provider_type,
+                credentials,
+                is_enabled: true,
+                failure_count: 0,
+                last_failure_at: None,
+                last_failure_message: None,
+                last_success_at: None,
+                created_at: Utc::now(),
+                updated_at: Utc::now(),
+            };
+
+            let result = dispatcher
+                .send(&synthetic_integration, &serde_json::json!({}), &payload)
+                .await;
+
+            if !result.success {
+                log::warn!(
+                    "Alert dispatch to {channel_name} for monitor {monitor_id} failed: {:?}",
+                    result.error_message
+                );
+            } else {
+                log::info!("Alert ({alert_type}) sent to {channel_name} for monitor {monitor_id}");
+            }
         }
 
         Ok(())
