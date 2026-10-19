@@ -54,6 +54,7 @@ export type {
   ApiError,
   AssembleInput,
   AssembleResponse,
+  AssignMonitorChannels,
   AssignUptimeMonitorChannels,
   AuthResponse,
   AuthToken,

@@ -2,8 +2,8 @@ import type { AlertIntegration } from '@rustrak/client';
 import { Plus, Trash2 } from 'lucide-react';
 import { useTranslations } from 'use-intl';
 import type { alertProviders } from '@/features/alert/model/providers';
-import { ProviderIcon } from '@/features/alert/ui/components/provider-icon';
 import { cn } from '@/shared/lib/utils';
+import { ProviderIcon } from '@/shared/ui/components/provider-icon';
 import { Button } from '@/shared/ui/components/shadcn/button';
 import {
   Dialog,

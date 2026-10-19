@@ -506,7 +506,8 @@
       "agents": "Agenți",
       "logs": "Jurnale",
       "settings": "Setări",
-      "uptimeMonitors": "Monitoare de disponibilitate"
+      "uptimeMonitors": "Monitoare de disponibilitate",
+      "cronMonitors": "Monitoare Cron"
     },
     "collapse": {
       "expand": "Extinde",
@@ -1840,6 +1841,67 @@
       "checkFailed": "Executarea verificării a eșuat",
       "checkOk": "Verificare reușită ({ms}ms)",
       "checkFailedResult": "Verificarea a eșuat"
+    }
+  },
+  "cronMonitors": {
+    "meta": {
+      "title": "Monitoare Cron"
+    },
+    "loadFailed": "Nu s-au putut încărca monitoarele cron",
+    "title": "Monitoare Cron",
+    "subtitle": "Semnale de verificare pentru joburi programate (Sentry Crons). Monitoarele sunt create automat de SDK la primul check-in.",
+    "empty": {
+      "title": "Încă nu există monitoare cron",
+      "description": "Un monitor apare aici automat la primul check-in trimis de aplicația ta pentru el."
+    },
+    "card": {
+      "checkIns": "Check-in-uri",
+      "channels": "Canale",
+      "schedule": "Program",
+      "margin": "Perioadă de grație",
+      "marginMinutes": "{minutes} min",
+      "lastCheckIn": "Ultimul check-in",
+      "never": "Niciodată",
+      "nextExpected": "Următorul așteptat"
+    },
+    "schedule": {
+      "unknown": "Necunoscut",
+      "interval": "La fiecare {value} {unit}"
+    },
+    "status": {
+      "active": "Activ",
+      "ok": "OK",
+      "error": "Eroare",
+      "missed": "Ratat",
+      "timeout": "Expirat",
+      "disabled": "Dezactivat"
+    },
+    "channels": {
+      "title": "Canale de alertă",
+      "description": "Alege ce canale alertează când „{slug}” ratează un check-in sau expiră.",
+      "noIntegrations": "Nu există încă integrări de alertă configurate. Adaugă una în Alerte mai întâi.",
+      "cancel": "Anulează",
+      "saving": "Se salvează...",
+      "save": "Salvează",
+      "loadFailed": "Nu s-au putut încărca canalele curente",
+      "saveFailed": "Nu s-au putut salva canalele",
+      "saved": "Canale actualizate"
+    },
+    "checkIns": {
+      "title": "Istoric check-in-uri",
+      "description": "Execuții recente ale „{slug}”, cele mai recente primele.",
+      "empty": "Nu există încă check-in-uri înregistrate.",
+      "columns": {
+        "status": "Stare",
+        "duration": "Durată",
+        "environment": "Mediu",
+        "timestamp": "Oră"
+      },
+      "durationSeconds": "{seconds}s",
+      "prev": "Anterior",
+      "next": "Următor",
+      "page": "Pagina {page}",
+      "loadFailed": "Nu s-au putut încărca check-in-urile"
     }
   }
 }

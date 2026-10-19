@@ -506,7 +506,8 @@
       "agents": "Agents",
       "logs": "Logs",
       "settings": "Paramètres",
-      "uptimeMonitors": "Moniteurs de disponibilité"
+      "uptimeMonitors": "Moniteurs de disponibilité",
+      "cronMonitors": "Moniteurs Cron"
     },
     "collapse": {
       "expand": "Développer",
@@ -1840,6 +1841,67 @@
       "checkFailed": "Échec de l'exécution du contrôle",
       "checkOk": "Contrôle réussi ({ms}ms)",
       "checkFailedResult": "Le contrôle a échoué"
+    }
+  },
+  "cronMonitors": {
+    "meta": {
+      "title": "Moniteurs Cron"
+    },
+    "loadFailed": "Impossible de charger les moniteurs cron",
+    "title": "Moniteurs Cron",
+    "subtitle": "Battements de tâches planifiées (Sentry Crons). Les moniteurs sont créés automatiquement par le SDK au premier check-in.",
+    "empty": {
+      "title": "Aucun moniteur cron pour le moment",
+      "description": "Un moniteur apparaît ici automatiquement dès que votre application envoie un premier check-in pour lui."
+    },
+    "card": {
+      "checkIns": "Check-ins",
+      "channels": "Canaux",
+      "schedule": "Planification",
+      "margin": "Période de grâce",
+      "marginMinutes": "{minutes} min",
+      "lastCheckIn": "Dernier check-in",
+      "never": "Jamais",
+      "nextExpected": "Prochain attendu"
+    },
+    "schedule": {
+      "unknown": "Inconnu",
+      "interval": "Toutes les {value} {unit}"
+    },
+    "status": {
+      "active": "Actif",
+      "ok": "OK",
+      "error": "Erreur",
+      "missed": "Manqué",
+      "timeout": "Expiré",
+      "disabled": "Désactivé"
+    },
+    "channels": {
+      "title": "Canaux d'alerte",
+      "description": "Choisissez quels canaux alertent quand « {slug} » manque un check-in ou expire.",
+      "noIntegrations": "Aucune intégration d'alerte n'est configurée. Ajoutez-en une dans Alertes d'abord.",
+      "cancel": "Annuler",
+      "saving": "Enregistrement...",
+      "save": "Enregistrer",
+      "loadFailed": "Impossible de charger les canaux actuels",
+      "saveFailed": "Impossible d'enregistrer les canaux",
+      "saved": "Canaux mis à jour"
+    },
+    "checkIns": {
+      "title": "Historique des check-ins",
+      "description": "Exécutions récentes de « {slug} », les plus récentes en premier.",
+      "empty": "Aucun check-in enregistré pour le moment.",
+      "columns": {
+        "status": "Statut",
+        "duration": "Durée",
+        "environment": "Environnement",
+        "timestamp": "Heure"
+      },
+      "durationSeconds": "{seconds}s",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "page": "Page {page}",
+      "loadFailed": "Impossible de charger les check-ins"
     }
   }
 }

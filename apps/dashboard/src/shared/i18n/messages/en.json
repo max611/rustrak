@@ -506,7 +506,8 @@
       "agents": "Agents",
       "logs": "Logs",
       "settings": "Settings",
-      "uptimeMonitors": "Uptime Monitors"
+      "uptimeMonitors": "Uptime Monitors",
+      "cronMonitors": "Cron Monitors"
     },
     "collapse": {
       "expand": "Expand",
@@ -1840,6 +1841,67 @@
       "checkFailed": "Failed to run check",
       "checkOk": "Check succeeded ({ms}ms)",
       "checkFailedResult": "Check failed"
+    }
+  },
+  "cronMonitors": {
+    "meta": {
+      "title": "Cron Monitors"
+    },
+    "loadFailed": "Failed to load cron monitors",
+    "title": "Cron Monitors",
+    "subtitle": "Scheduled-job heartbeats (Sentry Crons). Monitors are created automatically by the SDK on first check-in.",
+    "empty": {
+      "title": "No cron monitors yet",
+      "description": "A monitor appears here automatically the first time your app sends a check-in for it."
+    },
+    "card": {
+      "checkIns": "Check-ins",
+      "channels": "Channels",
+      "schedule": "Schedule",
+      "margin": "Grace period",
+      "marginMinutes": "{minutes} min",
+      "lastCheckIn": "Last check-in",
+      "never": "Never",
+      "nextExpected": "Next expected"
+    },
+    "schedule": {
+      "unknown": "Unknown",
+      "interval": "Every {value} {unit}"
+    },
+    "status": {
+      "active": "Active",
+      "ok": "OK",
+      "error": "Error",
+      "missed": "Missed",
+      "timeout": "Timed out",
+      "disabled": "Disabled"
+    },
+    "channels": {
+      "title": "Alert Channels",
+      "description": "Choose which channels alert when “{slug}” misses a check-in or times out.",
+      "noIntegrations": "No alert integrations are configured yet. Add one under Alerts first.",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save",
+      "loadFailed": "Failed to load current channels",
+      "saveFailed": "Failed to save channels",
+      "saved": "Channels updated"
+    },
+    "checkIns": {
+      "title": "Check-in History",
+      "description": "Recent executions of “{slug}”, newest first.",
+      "empty": "No check-ins recorded yet.",
+      "columns": {
+        "status": "Status",
+        "duration": "Duration",
+        "environment": "Environment",
+        "timestamp": "Time"
+      },
+      "durationSeconds": "{seconds}s",
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page {page}",
+      "loadFailed": "Failed to load check-ins"
     }
   }
 }

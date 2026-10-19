@@ -120,6 +120,45 @@ pub async fn list_check_ins(
 }
 
 #[cfg_attr(feature = "openapi", utoipa::path(
+    get,
+    path = "/api/projects/{project_id}/monitors/{slug}/channels",
+    tag = "Monitors",
+    params(
+        ("project_id" = i32, Path, description = "Project ID"),
+        ("slug" = String, Path, description = "Monitor slug"),
+    ),
+    responses(
+        (status = 200, description = "Currently assigned integration ids", body = AssignMonitorChannels),
+        (status = 401, description = "Unauthorized", body = crate::error::ErrorResponse),
+        (status = 404, description = "Not found", body = crate::error::ErrorResponse),
+    ),
+    security(("bearer_auth" = [])),
+))]
+/// GET /api/projects/{project_id}/monitors/{slug}/channels — the integration
+/// ids currently assigned, so a management UI can pre-select them before PUT
+/// blindly replaces the set.
+pub async fn get_monitor_channels(
+    pool: web::Data<DbPool>,
+    path: web::Path<(i32, String)>,
+    actor: ApiActor,
+) -> AppResult<HttpResponse> {
+    let (project_id, slug) = path.into_inner();
+    access::require(
+        pool.get_ref(),
+        actor.is_admin(),
+        actor.user_id(),
+        project_id,
+        Action::ViewProject,
+    )
+    .await?;
+
+    let monitor_id = monitor_id_for_slug(pool.get_ref(), project_id, &slug).await?;
+    let integration_ids = MonitorService::get_channel_ids(pool.get_ref(), monitor_id).await?;
+
+    Ok(HttpResponse::Ok().json(serde_json::json!({ "integration_ids": integration_ids })))
+}
+
+#[cfg_attr(feature = "openapi", utoipa::path(
     put,
     path = "/api/projects/{project_id}/monitors/{slug}/channels",
     tag = "Monitors",
@@ -163,7 +202,7 @@ pub async fn put_monitor_channels(
 
 #[cfg(feature = "openapi")]
 #[derive(OpenApi)]
-#[openapi(paths(list_monitors, list_check_ins, put_monitor_channels))]
+#[openapi(paths(list_monitors, list_check_ins, get_monitor_channels, put_monitor_channels))]
 pub struct MonitorsApi;
 
 /// Configure monitor routes.
@@ -172,6 +211,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
         web::scope("/api/projects/{project_id}/monitors")
             .route("", web::get().to(list_monitors))
             .route("/{slug}/checkins", web::get().to(list_check_ins))
+            .route("/{slug}/channels", web::get().to(get_monitor_channels))
             .route("/{slug}/channels", web::put().to(put_monitor_channels)),
     );
 }

@@ -1,8 +1,8 @@
 import type { AlertIntegration } from '@rustrak/client';
 import { useTranslations } from 'use-intl';
 import { getSlackMethod } from '@/features/alert/lib/routing';
-import { ProviderIcon } from '@/features/alert/ui/components/provider-icon';
 import { cn } from '@/shared/lib/utils';
+import { ProviderIcon } from '@/shared/ui/components/provider-icon';
 import { Switch } from '@/shared/ui/components/shadcn/switch';
 
 /**

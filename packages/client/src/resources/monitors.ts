@@ -1,9 +1,11 @@
 import {
+  assignMonitorChannelsSchema,
   checkInSchema,
   monitorsListResponseSchema,
   offsetPaginatedResponseSchema,
 } from '../schemas/index.js';
 import type {
+  AssignMonitorChannels,
   CheckIn,
   ListCheckInsOptions,
   Monitor,
@@ -56,5 +58,39 @@ export class MonitorsResource extends BaseResource {
       .json();
 
     return this.validate(data, offsetPaginatedResponseSchema(checkInSchema));
+  }
+
+  /**
+   * Gets the integration ids currently assigned to a monitor (by slug).
+   */
+  async getChannels(
+    projectId: number,
+    slug: string,
+  ): Promise<Result<AssignMonitorChannels, RustrakError>> {
+    return this.request(
+      () =>
+        this.http.get(`api/projects/${projectId}/monitors/${slug}/channels`),
+      assignMonitorChannelsSchema,
+    );
+  }
+
+  /**
+   * Replaces all alert-integration assignments for a monitor (by slug).
+   */
+  async putChannels(
+    projectId: number,
+    slug: string,
+    input: AssignMonitorChannels,
+  ): Promise<Result<void, RustrakError>> {
+    const validatedInput = this.validateInput(input, assignMonitorChannelsSchema);
+    if (!validatedInput.success) {
+      return validatedInput;
+    }
+
+    return this.requestVoid(() =>
+      this.http.put(`api/projects/${projectId}/monitors/${slug}/channels`, {
+        json: validatedInput.data,
+      }),
+    );
   }
 }

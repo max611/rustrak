@@ -9,6 +9,7 @@ import {
   Rocket,
   ScrollText,
   Settings,
+  Timer,
   Zap,
 } from 'lucide-react';
 import { PlatformIcon } from 'platformicons';
@@ -203,6 +204,11 @@ export function ProjectSidebar({ projectId, projects }: ProjectSidebarProps) {
       href: `/projects/${projectId}/uptime-monitors`,
       label: t('nav.uptimeMonitors'),
       icon: Radio,
+    },
+    {
+      href: `/projects/${projectId}/monitors`,
+      label: t('nav.cronMonitors'),
+      icon: Timer,
     },
     {
       href: `/projects/${projectId}/settings`,

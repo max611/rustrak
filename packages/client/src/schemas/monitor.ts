@@ -42,3 +42,11 @@ export const checkInSchema = z.object({
   trace_id: z.string().nullable(),
   timestamp: dateTimeSchema,
 });
+
+/**
+ * The integration ids currently assigned to a monitor (GET), and the request
+ * schema to replace them (PUT) — same shape both ways.
+ */
+export const assignMonitorChannelsSchema = z.object({
+  integration_ids: z.array(z.number().int()),
+});

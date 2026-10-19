@@ -4,12 +4,12 @@ import { useMemo } from 'react';
 import { useTranslations } from 'use-intl';
 import { alertTypeInfo } from '@/features/alert/model/alert-types';
 import { AlertTypeIcon } from '@/features/alert/ui/components/alert-type-icon';
-import { ProviderIcon } from '@/features/alert/ui/components/provider-icon';
 import { DataTable } from '@/shared/ui/components/data-table/data-table';
 import {
   createAppColumnHelper,
   useAppTable,
 } from '@/shared/ui/components/data-table/use-app-table';
+import { ProviderIcon } from '@/shared/ui/components/provider-icon';
 import { Badge } from '@/shared/ui/components/shadcn/badge';
 import { Button } from '@/shared/ui/components/shadcn/button';
 import { Switch } from '@/shared/ui/components/shadcn/switch';

@@ -5138,6 +5138,71 @@
       }
     },
     "/api/projects/{project_id}/monitors/{slug}/channels": {
+      "get": {
+        "tags": [
+          "Monitors"
+        ],
+        "summary": "GET /api/projects/{project_id}/monitors/{slug}/channels — the integration\nids currently assigned, so a management UI can pre-select them before PUT\nblindly replaces the set.",
+        "operationId": "get_monitor_channels",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "Project ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Monitor slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Currently assigned integration ids",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignMonitorChannels"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      },
       "put": {
         "tags": [
           "Monitors"

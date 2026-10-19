@@ -10,9 +10,9 @@ import {
 import { alertProviders } from '@/features/alert/model/providers';
 import { ConfirmDeleteDialog } from '@/features/alert/ui/components/confirm-delete-dialog';
 import { IntegrationConfigDialog } from '@/features/alert/ui/components/integration-config-dialog/integration-config-dialog';
-import { ProviderIcon } from '@/features/alert/ui/components/provider-icon';
 import type { Translate } from '@/shared/lib/error-copy';
 import { cn } from '@/shared/lib/utils';
+import { ProviderIcon } from '@/shared/ui/components/provider-icon';
 import { Badge } from '@/shared/ui/components/shadcn/badge';
 import { Button } from '@/shared/ui/components/shadcn/button';
 import {

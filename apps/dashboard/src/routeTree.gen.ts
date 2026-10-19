@@ -28,6 +28,7 @@ import { Route as AuthenticatedSettingsTeamRouteImport } from './routes/_authent
 import { Route as AuthenticatedSettingsTokensRouteImport } from './routes/_authenticated/settings/tokens';
 import { Route as AuthenticatedProjectsIdIndexRouteImport } from './routes/_authenticated/projects/$id/index';
 import { Route as AuthenticatedProjectsIdLogsRouteImport } from './routes/_authenticated/projects/$id/logs';
+import { Route as AuthenticatedProjectsIdMonitorsRouteImport } from './routes/_authenticated/projects/$id/monitors';
 import { Route as AuthenticatedProjectsIdSettingsRouteImport } from './routes/_authenticated/projects/$id/settings';
 import { Route as AuthenticatedProjectsIdUptimeMonitorsRouteImport } from './routes/_authenticated/projects/$id/uptime-monitors';
 import { Route as AuthenticatedProjectsIdAgentsIndexRouteImport } from './routes/_authenticated/projects/$id/agents/index';
@@ -152,6 +153,12 @@ const AuthenticatedProjectsIdLogsRoute =
   AuthenticatedProjectsIdLogsRouteImport.update({
     id: '/logs',
     path: '/logs',
+    getParentRoute: () => AuthenticatedProjectsIdRoute,
+  } as any);
+const AuthenticatedProjectsIdMonitorsRoute =
+  AuthenticatedProjectsIdMonitorsRouteImport.update({
+    id: '/monitors',
+    path: '/monitors',
     getParentRoute: () => AuthenticatedProjectsIdRoute,
   } as any);
 const AuthenticatedProjectsIdSettingsRoute =
@@ -287,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/projects/': typeof AuthenticatedProjectsIndexRoute;
   '/settings/': typeof AuthenticatedSettingsIndexRoute;
   '/projects/$id/logs': typeof AuthenticatedProjectsIdLogsRoute;
+  '/projects/$id/monitors': typeof AuthenticatedProjectsIdMonitorsRoute;
   '/projects/$id/settings': typeof AuthenticatedProjectsIdSettingsRouteWithChildren;
   '/projects/$id/uptime-monitors': typeof AuthenticatedProjectsIdUptimeMonitorsRoute;
   '/projects/$id/': typeof AuthenticatedProjectsIdIndexRoute;
@@ -324,6 +332,7 @@ export interface FileRoutesByTo {
   '/projects': typeof AuthenticatedProjectsIndexRoute;
   '/settings': typeof AuthenticatedSettingsIndexRoute;
   '/projects/$id/logs': typeof AuthenticatedProjectsIdLogsRoute;
+  '/projects/$id/monitors': typeof AuthenticatedProjectsIdMonitorsRoute;
   '/projects/$id/uptime-monitors': typeof AuthenticatedProjectsIdUptimeMonitorsRoute;
   '/projects/$id': typeof AuthenticatedProjectsIdIndexRoute;
   '/projects/$id/agents/$traceId': typeof AuthenticatedProjectsIdAgentsTraceIdRoute;
@@ -364,6 +373,7 @@ export interface FileRoutesById {
   '/_authenticated/projects/': typeof AuthenticatedProjectsIndexRoute;
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute;
   '/_authenticated/projects/$id/logs': typeof AuthenticatedProjectsIdLogsRoute;
+  '/_authenticated/projects/$id/monitors': typeof AuthenticatedProjectsIdMonitorsRoute;
   '/_authenticated/projects/$id/settings': typeof AuthenticatedProjectsIdSettingsRouteWithChildren;
   '/_authenticated/projects/$id/uptime-monitors': typeof AuthenticatedProjectsIdUptimeMonitorsRoute;
   '/_authenticated/projects/$id/': typeof AuthenticatedProjectsIdIndexRoute;
@@ -405,6 +415,7 @@ export interface FileRouteTypes {
     | '/projects/'
     | '/settings/'
     | '/projects/$id/logs'
+    | '/projects/$id/monitors'
     | '/projects/$id/settings'
     | '/projects/$id/uptime-monitors'
     | '/projects/$id/'
@@ -442,6 +453,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/settings'
     | '/projects/$id/logs'
+    | '/projects/$id/monitors'
     | '/projects/$id/uptime-monitors'
     | '/projects/$id'
     | '/projects/$id/agents/$traceId'
@@ -481,6 +493,7 @@ export interface FileRouteTypes {
     | '/_authenticated/projects/'
     | '/_authenticated/settings/'
     | '/_authenticated/projects/$id/logs'
+    | '/_authenticated/projects/$id/monitors'
     | '/_authenticated/projects/$id/settings'
     | '/_authenticated/projects/$id/uptime-monitors'
     | '/_authenticated/projects/$id/'
@@ -644,6 +657,13 @@ declare module '@tanstack/react-router' {
       path: '/logs';
       fullPath: '/projects/$id/logs';
       preLoaderRoute: typeof AuthenticatedProjectsIdLogsRouteImport;
+      parentRoute: typeof AuthenticatedProjectsIdRoute;
+    };
+    '/_authenticated/projects/$id/monitors': {
+      id: '/_authenticated/projects/$id/monitors';
+      path: '/monitors';
+      fullPath: '/projects/$id/monitors';
+      preLoaderRoute: typeof AuthenticatedProjectsIdMonitorsRouteImport;
       parentRoute: typeof AuthenticatedProjectsIdRoute;
     };
     '/_authenticated/projects/$id/settings': {
@@ -842,6 +862,7 @@ const AuthenticatedProjectsIdSettingsRouteWithChildren =
 
 interface AuthenticatedProjectsIdRouteChildren {
   AuthenticatedProjectsIdLogsRoute: typeof AuthenticatedProjectsIdLogsRoute;
+  AuthenticatedProjectsIdMonitorsRoute: typeof AuthenticatedProjectsIdMonitorsRoute;
   AuthenticatedProjectsIdSettingsRoute: typeof AuthenticatedProjectsIdSettingsRouteWithChildren;
   AuthenticatedProjectsIdUptimeMonitorsRoute: typeof AuthenticatedProjectsIdUptimeMonitorsRoute;
   AuthenticatedProjectsIdIndexRoute: typeof AuthenticatedProjectsIdIndexRoute;
@@ -861,6 +882,7 @@ interface AuthenticatedProjectsIdRouteChildren {
 const AuthenticatedProjectsIdRouteChildren: AuthenticatedProjectsIdRouteChildren =
   {
     AuthenticatedProjectsIdLogsRoute: AuthenticatedProjectsIdLogsRoute,
+    AuthenticatedProjectsIdMonitorsRoute: AuthenticatedProjectsIdMonitorsRoute,
     AuthenticatedProjectsIdSettingsRoute:
       AuthenticatedProjectsIdSettingsRouteWithChildren,
     AuthenticatedProjectsIdUptimeMonitorsRoute:

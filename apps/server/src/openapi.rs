@@ -128,6 +128,7 @@ impl Modify for SecurityAddon {
         crate::routes::agents::agent_traces,
         crate::routes::monitors::list_monitors,
         crate::routes::monitors::list_check_ins,
+        crate::routes::monitors::get_monitor_channels,
         crate::routes::monitors::put_monitor_channels,
         crate::routes::storage::get_summary,
         crate::routes::storage::get_projects,

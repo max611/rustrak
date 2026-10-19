@@ -326,6 +326,29 @@ impl MonitorService {
         Ok(())
     }
 
+    /// Lists the integration ids currently assigned to a monitor (regardless
+    /// of whether each is enabled), for the channel-management UI to
+    /// pre-select against. Resolves a slug to an id and 404s on no match.
+    pub async fn get_channel_ids(pool: &DbPool, monitor_id: Uuid) -> AppResult<Vec<i32>> {
+        #[cfg(feature = "postgres")]
+        let ids: Vec<i32> = sqlx::query_scalar(
+            "SELECT integration_id FROM monitor_alert_channels WHERE monitor_id = $1",
+        )
+        .bind(monitor_id)
+        .fetch_all(pool)
+        .await?;
+
+        #[cfg(feature = "sqlite")]
+        let ids: Vec<i32> = sqlx::query_scalar(
+            "SELECT integration_id FROM monitor_alert_channels WHERE monitor_id = $1",
+        )
+        .bind(monitor_id.to_string())
+        .fetch_all(pool)
+        .await?;
+
+        Ok(ids)
+    }
+
     /// Loads notification channels linked to a monitor.
     /// Returns `Vec<(provider_type, credentials_json, name)>`.
     async fn load_channels(
