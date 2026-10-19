@@ -48,7 +48,7 @@ async fn test_overdue_monitor_marked_missed() {
 
     // Two hours later the expected check-in never arrived → missed.
     let future = Utc::now() + Duration::hours(2);
-    MonitorService::process_overdue(&db.pool, future)
+    MonitorService::process_overdue(&db.pool, future, "https://example.com")
         .await
         .unwrap();
 
@@ -91,7 +91,7 @@ async fn test_not_yet_due_monitor_stays_ok() {
 
     // Only 10 minutes later — well within the hour.
     let soon = Utc::now() + Duration::minutes(10);
-    MonitorService::process_overdue(&db.pool, soon)
+    MonitorService::process_overdue(&db.pool, soon, "https://example.com")
         .await
         .unwrap();
 
@@ -117,7 +117,7 @@ async fn test_in_progress_exceeding_max_runtime_marked_timeout() {
 
     // 45 min later: past the 30-min runtime, but before the 1h next check-in.
     let future = Utc::now() + Duration::minutes(45);
-    MonitorService::process_overdue(&db.pool, future)
+    MonitorService::process_overdue(&db.pool, future, "https://example.com")
         .await
         .unwrap();
 
