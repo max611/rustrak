@@ -599,10 +599,14 @@ impl AlertService {
         let rule = match rule {
             Some(r) => r,
             None => {
-                log::debug!(
-                    "No enabled alert rule for {:?} in project {}",
+                // Not a bug by itself (a rule can be deliberately disabled or
+                // never created), but it means this issue went un-alerted, so
+                // it must be visible above debug.
+                log::warn!(
+                    "No enabled alert rule for {:?} in project {}: issue {} was not alerted",
                     alert_type,
-                    project.id
+                    project.id,
+                    issue.id
                 );
                 return Ok(());
             }
@@ -639,7 +643,13 @@ impl AlertService {
         .await?;
 
         if rule_channels.is_empty() {
-            log::debug!("No enabled integrations for alert rule {}", rule.id);
+            log::warn!(
+                "No enabled integrations for alert rule {} ({:?} in project {}): issue {} was not alerted",
+                rule.id,
+                alert_type,
+                project.id,
+                issue.id
+            );
             return Ok(());
         }
 
